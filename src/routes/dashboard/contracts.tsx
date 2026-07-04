@@ -431,7 +431,120 @@ function ContractDialog({
         </F>
         <F label="備註" full><Textarea rows={2} value={form.note ?? ""} onChange={(e) => set("note", e.target.value)} /></F>
       </div>
+      {form.id && <ContractAttachments contractId={form.id} canEdit={canEdit} canDelete={canDelete} />}
       <DialogFooter><Button onClick={save}>儲存</Button></DialogFooter>
     </DialogContent>
+  );
+}
+
+interface AttachmentRow {
+  id: string; bucket: string; path: string; filename: string | null;
+  mime: string | null; size: number | null; created_at: string;
+}
+
+function ContractAttachments({ contractId, canEdit, canDelete }: { contractId: string; canEdit: boolean; canDelete: boolean }) {
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const prefix = `contracts/${contractId}/`;
+  const key = ["contract-attachments", contractId];
+
+  const { data: rows = [] } = useQuery({
+    queryKey: key,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("attachments").select("*")
+        .eq("entity_type", "contract").eq("entity_id", contractId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as AttachmentRow[];
+    },
+  });
+
+  const onPick = async (files: FileList | null) => {
+    if (!files?.length) return;
+    setUploading(true);
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes.user?.id ?? null;
+      for (const file of Array.from(files)) {
+        const safe = file.name.replace(/[^\w.\-\u4e00-\u9fff]+/g, "_");
+        const path = `${prefix}${Date.now()}_${safe}`;
+        const up = await supabase.storage.from("attachments").upload(path, file, {
+          cacheControl: "3600", upsert: false, contentType: file.type || undefined,
+        });
+        if (up.error) { toast.error(up.error.message); continue; }
+        const ins = await supabase.from("attachments").insert({
+          bucket: "attachments", path, filename: file.name,
+          mime: file.type || null, size: file.size, uploaded_by: uid,
+          entity_type: "contract", entity_id: contractId,
+        } as any);
+        if (ins.error) { toast.error(ins.error.message); continue; }
+      }
+      toast.success("已上傳");
+      qc.invalidateQueries({ queryKey: key });
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const download = async (r: AttachmentRow) => {
+    const { data, error } = await supabase.storage.from(r.bucket).createSignedUrl(r.path, 60);
+    if (error || !data?.signedUrl) { toast.error(error?.message ?? "下載失敗"); return; }
+    const a = document.createElement("a");
+    a.href = data.signedUrl; a.download = r.filename ?? r.path.split("/").pop() ?? "file";
+    a.target = "_blank"; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  const remove = async (r: AttachmentRow) => {
+    if (!confirm(`確定刪除「${r.filename ?? r.path}」？`)) return;
+    const rm = await supabase.storage.from(r.bucket).remove([r.path]);
+    if (rm.error) { toast.error(rm.error.message); return; }
+    const del = await supabase.from("attachments").delete().eq("id", r.id);
+    if (del.error) { toast.error(del.error.message); return; }
+    toast.success("已刪除");
+    qc.invalidateQueries({ queryKey: key });
+  };
+
+  const fmtSize = (n: number | null) => {
+    if (n == null) return "—";
+    if (n < 1024) return `${n} B`;
+    if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+    return `${(n / 1024 / 1024).toFixed(1)} MB`;
+  };
+
+  return (
+    <div className="space-y-2 border-t pt-4">
+      <div className="flex items-center justify-between">
+        <Label className="text-sm font-medium">附件</Label>
+        {canEdit && (
+          <div className="flex items-center gap-2">
+            <input ref={fileRef} type="file" multiple className="hidden" onChange={(e) => onPick(e.target.files)} />
+            <Button size="sm" variant="outline" disabled={uploading} onClick={() => fileRef.current?.click()}>
+              {uploading ? "上傳中…" : "上傳檔案"}
+            </Button>
+          </div>
+        )}
+      </div>
+      {rows.length === 0 ? (
+        <p className="text-sm text-muted-foreground">尚無附件</p>
+      ) : (
+        <ul className="divide-y rounded border">
+          {rows.map((r) => (
+            <li key={r.id} className="flex items-center justify-between gap-2 px-3 py-2 text-sm">
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium">{r.filename ?? r.path.split("/").pop()}</div>
+                <div className="text-xs text-muted-foreground">{fmtSize(r.size)} · {r.mime ?? "—"}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => download(r)}>下載</Button>
+                {canDelete && <Button size="sm" variant="outline" onClick={() => remove(r)}>刪除</Button>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
