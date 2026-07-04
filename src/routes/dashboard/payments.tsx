@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { downloadCsv, todayStamp } from "@/lib/csv";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/dashboard/payments")({ component: Page });
 

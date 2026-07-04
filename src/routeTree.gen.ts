@@ -26,6 +26,7 @@ import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard/o
 import { Route as DashboardMenuManagementRouteImport } from './routes/dashboard/menu-management'
 import { Route as DashboardLookupsRouteImport } from './routes/dashboard/lookups'
 import { Route as DashboardIssueReportsRouteImport } from './routes/dashboard/issue-reports'
+import { Route as DashboardInvoicesRouteImport } from './routes/dashboard/invoices'
 import { Route as DashboardInvitationsRouteImport } from './routes/dashboard/invitations'
 import { Route as DashboardFeatureRequestsRouteImport } from './routes/dashboard/feature-requests'
 import { Route as DashboardErrorLogsRouteImport } from './routes/dashboard/error-logs'
@@ -128,6 +129,11 @@ const DashboardIssueReportsRoute = DashboardIssueReportsRouteImport.update({
   path: '/issue-reports',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardInvoicesRoute = DashboardInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardInvitationsRoute = DashboardInvitationsRouteImport.update({
   id: '/invitations',
   path: '/invitations',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
     | '/dashboard/invitations'
+    | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
     | '/dashboard/menu-management'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
     | '/dashboard/invitations'
+    | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
     | '/dashboard/menu-management'
@@ -390,6 +401,7 @@ export interface FileRouteTypes {
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
     | '/dashboard/invitations'
+    | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
     | '/dashboard/menu-management'
@@ -540,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIssueReportsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/invoices': {
+      id: '/dashboard/invoices'
+      path: '/invoices'
+      fullPath: '/dashboard/invoices'
+      preLoaderRoute: typeof DashboardInvoicesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/invitations': {
       id: '/dashboard/invitations'
       path: '/invitations'
@@ -657,6 +676,7 @@ interface DashboardRouteChildren {
   DashboardErrorLogsRoute: typeof DashboardErrorLogsRoute
   DashboardFeatureRequestsRoute: typeof DashboardFeatureRequestsRoute
   DashboardInvitationsRoute: typeof DashboardInvitationsRoute
+  DashboardInvoicesRoute: typeof DashboardInvoicesRoute
   DashboardIssueReportsRoute: typeof DashboardIssueReportsRoute
   DashboardLookupsRoute: typeof DashboardLookupsRoute
   DashboardMenuManagementRoute: typeof DashboardMenuManagementRoute
@@ -689,6 +709,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardErrorLogsRoute: DashboardErrorLogsRoute,
   DashboardFeatureRequestsRoute: DashboardFeatureRequestsRoute,
   DashboardInvitationsRoute: DashboardInvitationsRoute,
+  DashboardInvoicesRoute: DashboardInvoicesRoute,
   DashboardIssueReportsRoute: DashboardIssueReportsRoute,
   DashboardLookupsRoute: DashboardLookupsRoute,
   DashboardMenuManagementRoute: DashboardMenuManagementRoute,
