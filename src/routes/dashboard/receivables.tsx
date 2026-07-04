@@ -56,6 +56,28 @@ function Page() {
         )
       } />
 
+      <Card>
+        <CardHeader><CardTitle>未來現金流預測</CardTitle></CardHeader>
+        <CardContent>
+          {chartData.length === 0 ? (
+            <div className="text-sm text-muted-foreground py-8 text-center">尚無預測資料</div>
+          ) : (
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" tickFormatter={(v) => Number(v).toLocaleString("zh-TW")} />
+                  <Tooltip formatter={(v: any, name: string) => name === "expected_in" ? [money(Number(v)), "預計收款"] : [v, "筆數"]} />
+                  <Bar dataKey="expected_in" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+
       <div className="grid gap-3 sm:grid-cols-2">
         <Card>
           <CardContent className="p-4">
