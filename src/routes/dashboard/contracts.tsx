@@ -120,7 +120,7 @@ function Page() {
       const { data, error } = await supabase.from("v_contract_summary" as any)
         .select("*").order("signed_date", { ascending: false, nullsFirst: false });
       if (error) throw error;
-      return (data ?? []) as SummaryRow[];
+      return (data ?? []) as unknown as SummaryRow[];
     },
   });
 
