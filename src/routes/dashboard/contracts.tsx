@@ -334,7 +334,7 @@ type Opt = { code: string; label: string };
 function ContractDialog({
   form, setForm, save, isNew,
   typeOpts, statusOpts, periodOpts, billingOpts, payOpts, invOpts,
-  clients, cases, systems,
+  clients, cases, systems, canEdit, canDelete,
 }: {
   form: ContractForm | null;
   setForm: (f: ContractForm | null) => void;
@@ -343,6 +343,7 @@ function ContractDialog({
   clients: { id: string; code: string; name: string }[];
   cases: { id: string; code: string; title: string }[];
   systems: { id: string; code: string; name: string }[];
+  canEdit: boolean; canDelete: boolean;
 }) {
   if (!form) return null;
   const set = <K extends keyof ContractForm>(k: K, v: ContractForm[K]) => setForm({ ...form, [k]: v });
