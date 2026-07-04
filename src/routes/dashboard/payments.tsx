@@ -82,6 +82,7 @@ function Page() {
 
   const [form, setForm] = useState<Partial<Payment> | null>(null);
   const isNew = form && !form.id;
+  const [collectFor, setCollectFor] = useState<Payment | null>(null);
   const numOrNull = (v: unknown) => (v === "" || v == null ? null : Number(v));
   const save = async () => {
     if (!form?.contract_id) { toast.error("請選擇合約"); return; }
