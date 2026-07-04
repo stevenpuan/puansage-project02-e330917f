@@ -135,7 +135,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="任務看板" description="商機任務的看板追蹤與轉專案" actions={
+      <PageHeader title="商機看板" description="商機任務的看板追蹤與轉專案" actions={
         <div className="flex items-center gap-3">
           <Tabs value={view} onValueChange={(v) => setView(v as "board" | "list")}>
             <TabsList>
@@ -145,7 +145,7 @@ function Page() {
           </Tabs>
           {canCreate && (
             <Dialog open={!!isNew} onOpenChange={(o) => !o && setForm(null)}>
-              <DialogTrigger asChild><Button onClick={() => setForm({ ...empty, status: statusOpts[0]?.code ?? "" })}>新增任務</Button></DialogTrigger>
+              <DialogTrigger asChild><Button onClick={() => setForm({ ...empty, status: statusOpts[0]?.code ?? "" })}>新增商機</Button></DialogTrigger>
               <OppForm form={form} setForm={setForm} save={save} isNew
                 clients={clients} profiles={profiles} statusOpts={statusOpts} sourceOpts={sourceOpts} />
             </Dialog>
@@ -220,7 +220,7 @@ function Page() {
                   </TableRow>
                 ))}
                 {rows.length === 0 && (
-                  <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-6">尚無任務</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-6">尚無商機</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
@@ -293,7 +293,7 @@ function OppForm({ form, setForm, save, isNew, clients, profiles, statusOpts, so
   const set = <K extends keyof Opp>(k: K, v: Opp[K] | string) => setForm({ ...form, [k]: v as Opp[K] });
   return (
     <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-      <DialogHeader><DialogTitle>{isNew ? "新增任務" : "編輯任務"}</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isNew ? "新增商機" : "編輯商機"}</DialogTitle></DialogHeader>
       <div className="grid gap-3 sm:grid-cols-2">
         <F label="代號"><Input value={form.code ?? ""} onChange={(e) => set("code", e.target.value)} placeholder="OPP-001" /></F>
         <F label="標題"><Input value={form.title ?? ""} onChange={(e) => set("title", e.target.value)} /></F>

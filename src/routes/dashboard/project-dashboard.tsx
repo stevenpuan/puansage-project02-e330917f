@@ -82,7 +82,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="進度儀錶板" description="全專案任務、里程碑與成員負載" />
+      <PageHeader title="進度儀表板" description="全專案任務、里程碑與成員負載" />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="進行中專案" value={kpis.activeProjects} />

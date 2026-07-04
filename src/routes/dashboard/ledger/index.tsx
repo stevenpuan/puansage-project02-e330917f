@@ -59,7 +59,7 @@ function LedgerHome() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="交付台帳總覽" description="所有系統的維護到期與收款狀態一覽" />
+      <PageHeader title="交付總覽" description="所有系統的維護到期與收款狀態一覽" />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat title="系統總數" value={stats?.total} to="/dashboard/ledger/systems" />

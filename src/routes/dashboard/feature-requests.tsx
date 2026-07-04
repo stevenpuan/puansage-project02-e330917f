@@ -66,7 +66,7 @@ function Page() {
     if (remaining < c && !overdraft) { toast.error(`本月點數不足（剩 ${remaining}）`); return; }
     const { error } = await supabase.from("feature_requests").insert({ title, area: area || null, description: desc || null, points_cost: c, submitter_id: user?.id ?? null });
     if (error) { toast.error(error.message); return; }
-    toast.success("已送出許願");
+    toast.success("已送出需求");
     setOpen(false); setTitle(""); setArea(""); setDesc(""); setCost("1");
     qc.invalidateQueries({ queryKey: ["feature_requests"] });
   };
@@ -79,11 +79,11 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="許願清單" description="提出功能需求（每月點數配額）" actions={can("feature_requests", "create") ? (
+      <PageHeader title="功能需求" description="提出功能需求（每月點數配額）" actions={can("feature_requests", "create") ? (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button>新增許願</Button></DialogTrigger>
+          <DialogTrigger asChild><Button>新增需求</Button></DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>新增許願</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>新增需求</DialogTitle></DialogHeader>
             <div className="space-y-3">
               <div className="space-y-1"><Label>標題</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
               <div className="space-y-1"><Label>區塊</Label><Input value={area} onChange={(e) => setArea(e.target.value)} /></div>
@@ -97,7 +97,7 @@ function Page() {
 
       <Card><CardContent className="py-4 flex items-center gap-6">
         <div>
-          <div className="text-xs text-muted-foreground">本月許願點數（{period}）</div>
+          <div className="text-xs text-muted-foreground">本月需求點數（{period}）</div>
           <div className="text-2xl font-bold">
             <span className={remaining < 0 ? "text-destructive" : ""}>{remaining}</span>
             <span className="text-base text-muted-foreground font-normal"> / {monthly}</span>
