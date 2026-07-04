@@ -177,6 +177,7 @@ function Page() {
                     <TableCell><Badge variant="outline">{r.invoice_status ?? "—"}</Badge></TableCell>
                     <TableCell className="text-right space-x-2">
                       {canEdit && r.status !== "已收" && <Button size="sm" onClick={() => markPaid(r)}>標記已收</Button>}
+                      {canEdit && r.status !== "已收" && <Button size="sm" variant="outline" onClick={() => setCollectFor(r)}>催收</Button>}
                       {canEdit && <Button size="sm" variant="outline" onClick={() => setForm({ ...r })}>編輯</Button>}
                       {canDelete && <Button size="sm" variant="outline" onClick={() => del(r)}>刪除</Button>}
                     </TableCell>
