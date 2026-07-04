@@ -20,6 +20,7 @@ import { Route as DashboardSystemDocsRouteImport } from './routes/dashboard/syst
 import { Route as DashboardSystemConfigRouteImport } from './routes/dashboard/system-config'
 import { Route as DashboardServiceTicketsRouteImport } from './routes/dashboard/service-tickets'
 import { Route as DashboardRolePermissionsRouteImport } from './routes/dashboard/role-permissions'
+import { Route as DashboardRenewalsRouteImport } from './routes/dashboard/renewals'
 import { Route as DashboardReceivablesRouteImport } from './routes/dashboard/receivables'
 import { Route as DashboardQuotesRouteImport } from './routes/dashboard/quotes'
 import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
@@ -104,6 +105,11 @@ const DashboardRolePermissionsRoute =
     path: '/role-permissions',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardRenewalsRoute = DashboardRenewalsRouteImport.update({
+  id: '/renewals',
+  path: '/renewals',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardReceivablesRoute = DashboardReceivablesRouteImport.update({
   id: '/receivables',
   path: '/receivables',
@@ -268,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
+  '/dashboard/renewals': typeof DashboardRenewalsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
   '/dashboard/system-config': typeof DashboardSystemConfigRoute
@@ -307,6 +314,7 @@ export interface FileRoutesByTo {
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
+  '/dashboard/renewals': typeof DashboardRenewalsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
   '/dashboard/system-config': typeof DashboardSystemConfigRoute
@@ -348,6 +356,7 @@ export interface FileRoutesById {
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
+  '/dashboard/renewals': typeof DashboardRenewalsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
   '/dashboard/system-config': typeof DashboardSystemConfigRoute
@@ -390,6 +399,7 @@ export interface FileRouteTypes {
     | '/dashboard/project-dashboard'
     | '/dashboard/quotes'
     | '/dashboard/receivables'
+    | '/dashboard/renewals'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
     | '/dashboard/system-config'
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/dashboard/project-dashboard'
     | '/dashboard/quotes'
     | '/dashboard/receivables'
+    | '/dashboard/renewals'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
     | '/dashboard/system-config'
@@ -469,6 +480,7 @@ export interface FileRouteTypes {
     | '/dashboard/project-dashboard'
     | '/dashboard/quotes'
     | '/dashboard/receivables'
+    | '/dashboard/renewals'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
     | '/dashboard/system-config'
@@ -569,6 +581,13 @@ declare module '@tanstack/react-router' {
       path: '/role-permissions'
       fullPath: '/dashboard/role-permissions'
       preLoaderRoute: typeof DashboardRolePermissionsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/renewals': {
+      id: '/dashboard/renewals'
+      path: '/renewals'
+      fullPath: '/dashboard/renewals'
+      preLoaderRoute: typeof DashboardRenewalsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/receivables': {
@@ -784,6 +803,7 @@ interface DashboardRouteChildren {
   DashboardProjectDashboardRoute: typeof DashboardProjectDashboardRoute
   DashboardQuotesRoute: typeof DashboardQuotesRoute
   DashboardReceivablesRoute: typeof DashboardReceivablesRoute
+  DashboardRenewalsRoute: typeof DashboardRenewalsRoute
   DashboardRolePermissionsRoute: typeof DashboardRolePermissionsRoute
   DashboardServiceTicketsRoute: typeof DashboardServiceTicketsRoute
   DashboardSystemConfigRoute: typeof DashboardSystemConfigRoute
@@ -822,6 +842,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardProjectDashboardRoute: DashboardProjectDashboardRoute,
   DashboardQuotesRoute: DashboardQuotesRoute,
   DashboardReceivablesRoute: DashboardReceivablesRoute,
+  DashboardRenewalsRoute: DashboardRenewalsRoute,
   DashboardRolePermissionsRoute: DashboardRolePermissionsRoute,
   DashboardServiceTicketsRoute: DashboardServiceTicketsRoute,
   DashboardSystemConfigRoute: DashboardSystemConfigRoute,
