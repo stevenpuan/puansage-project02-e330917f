@@ -196,6 +196,9 @@ function Page() {
         <PaymentForm form={form} setForm={setForm} save={save} isNew={false} contracts={contracts} contractLabel={contractLabel}
           statusOpts={statusOpts} invOpts={invOpts} methodOpts={methodOpts} />
       </Dialog>
+
+      <CollectionDialog payment={collectFor} onClose={() => setCollectFor(null)} />
+
     </div>
   );
 }
