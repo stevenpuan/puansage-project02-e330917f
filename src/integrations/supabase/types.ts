@@ -580,6 +580,51 @@ export type Database = {
           },
         ]
       }
+      collection_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          next_follow_date: string | null
+          note: string | null
+          payment_id: string | null
+        }
+        Insert: {
+          action?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          next_follow_date?: string | null
+          note?: string | null
+          payment_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          next_follow_date?: string | null
+          note?: string | null
+          payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_logs_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_logs_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           auto_renew: boolean
@@ -941,6 +986,106 @@ export type Database = {
             columns: ["role_id"]
             isOneToOne: false
             referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_total: number | null
+          amount_untaxed: number | null
+          buyer_name: string | null
+          buyer_tax_id: string | null
+          contract_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          invoice_date: string | null
+          invoice_no: string | null
+          note: string | null
+          payment_id: string | null
+          status: string | null
+          tax: number | null
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount_total?: number | null
+          amount_untaxed?: number | null
+          buyer_name?: string | null
+          buyer_tax_id?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_no?: string | null
+          note?: string | null
+          payment_id?: string | null
+          status?: string | null
+          tax?: number | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount_total?: number | null
+          amount_untaxed?: number | null
+          buyer_name?: string | null
+          buyer_tax_id?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          invoice_date?: string | null
+          invoice_no?: string | null
+          note?: string | null
+          payment_id?: string | null
+          status?: string | null
+          tax?: number | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_expiry_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
             referencedColumns: ["id"]
           },
         ]
@@ -1738,6 +1883,14 @@ export type Database = {
           priority: string | null
           status: string | null
           title: string | null
+        }
+        Relationships: []
+      }
+      v_cashflow_forecast: {
+        Row: {
+          expected_in: number | null
+          items: number | null
+          month: string | null
         }
         Relationships: []
       }
