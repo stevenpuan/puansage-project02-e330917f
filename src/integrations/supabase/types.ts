@@ -212,6 +212,13 @@ export type Database = {
             foreignKeyName: "case_tasks_case_id_fkey"
             columns: ["case_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -760,6 +767,13 @@ export type Database = {
             foreignKeyName: "commission_entries_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -940,6 +954,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_project_closeout"
             referencedColumns: ["id"]
           },
           {
@@ -1453,6 +1474,13 @@ export type Database = {
             foreignKeyName: "milestones_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -1554,6 +1582,13 @@ export type Database = {
             columns: ["converted_project_id"]
             isOneToOne: false
             referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_converted_project_id_fkey"
+            columns: ["converted_project_id"]
+            isOneToOne: false
+            referencedRelation: "v_project_closeout"
             referencedColumns: ["id"]
           },
           {
@@ -1737,6 +1772,13 @@ export type Database = {
             foreignKeyName: "project_members_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -1745,6 +1787,144 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quote_items: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          qty: number | null
+          quote_id: string | null
+          sort_order: number | null
+          unit_price: number | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          qty?: number | null
+          quote_id?: string | null
+          sort_order?: number | null
+          unit_price?: number | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          qty?: number | null
+          quote_id?: string | null
+          sort_order?: number | null
+          unit_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "v_quote_summary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotes: {
+        Row: {
+          client_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          note: string | null
+          opportunity_id: string | null
+          quote_date: string | null
+          quote_no: string | null
+          status: string
+          subtotal: number | null
+          tax: number | null
+          title: string | null
+          total: number | null
+          updated_at: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          opportunity_id?: string | null
+          quote_date?: string | null
+          quote_no?: string | null
+          status?: string
+          subtotal?: number | null
+          tax?: number | null
+          title?: string | null
+          total?: number | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          opportunity_id?: string | null
+          quote_date?: string | null
+          quote_no?: string | null
+          status?: string
+          subtotal?: number | null
+          tax?: number | null
+          title?: string | null
+          total?: number | null
+          updated_at?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "quotes_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
             referencedColumns: ["id"]
           },
         ]
@@ -2338,6 +2518,13 @@ export type Database = {
             foreignKeyName: "contracts_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -2415,6 +2602,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_project_closeout"
             referencedColumns: ["id"]
           },
           {
@@ -2511,6 +2705,52 @@ export type Database = {
         }
         Relationships: []
       }
+      v_project_closeout: {
+        Row: {
+          client_id: string | null
+          client_name: string | null
+          code: string | null
+          has_acceptance: boolean | null
+          has_maintenance_contract: boolean | null
+          has_warranty: boolean | null
+          id: string | null
+          open_tasks: number | null
+          payments_cleared: boolean | null
+          status: string | null
+          system_registered: boolean | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+        ]
+      }
       v_project_tasks: {
         Row: {
           assignee_id: string | null
@@ -2557,6 +2797,13 @@ export type Database = {
             foreignKeyName: "case_tasks_case_id_fkey"
             columns: ["case_id"]
             isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
             referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
@@ -2590,6 +2837,63 @@ export type Database = {
           },
         ]
       }
+      v_quote_summary: {
+        Row: {
+          client_id: string | null
+          client_name: string | null
+          id: string | null
+          is_expired: boolean | null
+          item_count: number | null
+          opp_code: string | null
+          opp_title: string | null
+          opportunity_id: string | null
+          quote_date: string | null
+          quote_no: string | null
+          status: string | null
+          subtotal: number | null
+          tax: number | null
+          title: string | null
+          total: number | null
+          valid_until: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "quotes_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_receivables_by_client: {
         Row: {
           client_id: string | null
@@ -2598,6 +2902,25 @@ export type Database = {
           outstanding: number | null
           overdue_amount: number | null
           received: number | null
+        }
+        Relationships: []
+      }
+      v_renewal_center: {
+        Row: {
+          client_name: string | null
+          days_left: number | null
+          due_date: string | null
+          ref_id: string | null
+          title: string | null
+          type: string | null
+        }
+        Relationships: []
+      }
+      v_sales_funnel: {
+        Row: {
+          amount: number | null
+          count: number | null
+          status: string | null
         }
         Relationships: []
       }
@@ -2752,6 +3075,7 @@ export type Database = {
         Args: { p_contract: string }
         Returns: number
       }
+      gen_renewal_contract: { Args: { p_contract: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       redeem_invitation: { Args: { p_code: string }; Returns: string }
       user_can: {
