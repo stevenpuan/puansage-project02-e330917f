@@ -232,7 +232,7 @@ function Page() {
             <ContractDialog form={form} setForm={setForm} save={save} isNew={!!isNew}
               typeOpts={typeOpts} statusOpts={statusOpts} periodOpts={periodOpts}
               billingOpts={billingOpts} payOpts={payOpts} invOpts={invOpts}
-              clients={clients} cases={cases} systems={systems} />
+              clients={clients} cases={cases} systems={systems} canEdit={canEdit} canDelete={canDelete} />
           </Dialog>
         )
       } />
