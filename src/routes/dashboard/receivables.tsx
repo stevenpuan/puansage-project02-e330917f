@@ -32,6 +32,15 @@ function Page() {
       return (data ?? []) as Row[];
     },
   });
+  const { data: cash = [] } = useQuery({
+    queryKey: ["cashflow-forecast"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("v_cashflow_forecast" as any).select("*").order("month");
+      if (error) throw error;
+      return (data ?? []) as unknown as CashRow[];
+    },
+  });
+  const chartData = cash.map((c) => ({ month: c.month, expected_in: Number(c.expected_in ?? 0), items: c.items ?? 0 }));
   const totalOut = rows.reduce((s, r) => s + Number(r.outstanding ?? 0), 0);
   const totalOverdue = rows.reduce((s, r) => s + Number(r.overdue_amount ?? 0), 0);
 
