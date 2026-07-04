@@ -238,17 +238,6 @@ const DashboardCasesCaseIdRoute = DashboardCasesCaseIdRouteImport.update({
   getParentRoute: () => DashboardRoute,
 } as any)
 
-const DashboardProjectBoardRoute = DashboardProjectBoardRouteImport.update({
-  id: '/project-board',
-  path: '/project-board',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardProjectDashboardRoute = DashboardProjectDashboardRouteImport.update({
-  id: '/project-dashboard',
-  path: '/project-dashboard',
-  getParentRoute: () => DashboardRoute,
-} as any)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
