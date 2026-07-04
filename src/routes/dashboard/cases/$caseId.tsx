@@ -240,6 +240,10 @@ function Page() {
 
       <WarrantySection caseId={caseId} current={current} set={set} canEdit={canEdit} />
 
+      <CloseoutSection caseId={caseId} canEdit={canEdit} />
+
+
+
 
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
