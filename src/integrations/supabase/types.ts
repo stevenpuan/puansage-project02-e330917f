@@ -625,6 +625,176 @@ export type Database = {
           },
         ]
       }
+      commission_entries: {
+        Row: {
+          base_amount: number | null
+          commission_amount: number | null
+          contract_id: string | null
+          created_at: string | null
+          created_by: string | null
+          deal_role: string | null
+          id: string
+          note: string | null
+          payee_id: string
+          payment_id: string | null
+          payout_period: string | null
+          payout_status: string
+          plan_id: string | null
+          project_id: string | null
+          rate: number | null
+          realized: boolean
+          realized_on: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          base_amount?: number | null
+          commission_amount?: number | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deal_role?: string | null
+          id?: string
+          note?: string | null
+          payee_id: string
+          payment_id?: string | null
+          payout_period?: string | null
+          payout_status?: string
+          plan_id?: string | null
+          project_id?: string | null
+          rate?: number | null
+          realized?: boolean
+          realized_on?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          base_amount?: number | null
+          commission_amount?: number | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deal_role?: string | null
+          id?: string
+          note?: string | null
+          payee_id?: string
+          payment_id?: string | null
+          payout_period?: string | null
+          payout_status?: string
+          plan_id?: string | null
+          project_id?: string | null
+          rate?: number | null
+          realized?: boolean
+          realized_on?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_entries_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_expiry_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "commission_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commission_plans: {
+        Row: {
+          base: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean
+          name: string
+          note: string | null
+          rate: number | null
+          tiers: Json | null
+        }
+        Insert: {
+          base?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          note?: string | null
+          rate?: number | null
+          tiers?: Json | null
+        }
+        Update: {
+          base?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          note?: string | null
+          rate?: number | null
+          tiers?: Json | null
+        }
+        Relationships: []
+      }
       contracts: {
         Row: {
           auto_renew: boolean
@@ -1676,6 +1846,146 @@ export type Database = {
         }
         Relationships: []
       }
+      service_tickets: {
+        Row: {
+          assignee_id: string | null
+          billable: boolean | null
+          client_id: string | null
+          contract_id: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          note: string | null
+          opened_at: string | null
+          priority: string | null
+          resolved_at: string | null
+          responded_at: string | null
+          spent_hours: number | null
+          status: string | null
+          system_id: string | null
+          ticket_no: string | null
+          title: string
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assignee_id?: string | null
+          billable?: boolean | null
+          client_id?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          note?: string | null
+          opened_at?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          responded_at?: string | null
+          spent_hours?: number | null
+          status?: string | null
+          system_id?: string | null
+          ticket_no?: string | null
+          title: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assignee_id?: string | null
+          billable?: boolean | null
+          client_id?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          note?: string | null
+          opened_at?: string | null
+          priority?: string | null
+          resolved_at?: string | null
+          responded_at?: string | null
+          spent_hours?: number | null
+          status?: string | null
+          system_id?: string | null
+          ticket_no?: string | null
+          title?: string
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_expiry_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "systems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "v_maintenance_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       system_configs: {
         Row: {
           description: string | null
@@ -1948,6 +2258,18 @@ export type Database = {
         }
         Relationships: []
       }
+      v_commission_by_person: {
+        Row: {
+          entries: number | null
+          payee_id: string | null
+          payee_name: string | null
+          payout_period: string | null
+          pending_amount: number | null
+          realized_amount: number | null
+          total_amount: number | null
+        }
+        Relationships: []
+      }
       v_contract_expiry_alerts: {
         Row: {
           auto_renew: boolean | null
@@ -2194,6 +2516,103 @@ export type Database = {
         }
         Relationships: []
       }
+      v_ticket_summary: {
+        Row: {
+          assignee_id: string | null
+          billable: boolean | null
+          client_id: string | null
+          client_name: string | null
+          contract_id: string | null
+          id: string | null
+          opened_at: string | null
+          priority: string | null
+          resolved_at: string | null
+          responded_at: string | null
+          sla_breached: boolean | null
+          sla_due: string | null
+          sla_hours: number | null
+          spent_hours: number | null
+          status: string | null
+          system_code: string | null
+          system_id: string | null
+          system_name: string | null
+          ticket_no: string | null
+          title: string | null
+          type: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "service_tickets_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_expiry_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "systems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "v_maintenance_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_warranty_status: {
         Row: {
           acceptance_date: string | null
@@ -2244,6 +2663,10 @@ export type Database = {
     Functions: {
       convert_opportunity: { Args: { p_opp: string }; Returns: string }
       daily_maintenance: { Args: never; Returns: Json }
+      gen_maintenance_payments: {
+        Args: { p_contract: string }
+        Returns: number
+      }
       is_admin: { Args: never; Returns: boolean }
       redeem_invitation: { Args: { p_code: string }; Returns: string }
       user_can: {
