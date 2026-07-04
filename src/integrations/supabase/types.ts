@@ -203,6 +203,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "case_tasks_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -213,6 +220,7 @@ export type Database = {
       }
       cases: {
         Row: {
+          acceptance_date: string | null
           amount: number | null
           client_id: string | null
           closed_at: string | null
@@ -221,7 +229,9 @@ export type Database = {
           created_by: string | null
           description: string | null
           due_date: string | null
+          go_live_date: string | null
           id: string
+          kickoff_date: string | null
           note: string | null
           owner_id: string | null
           priority: string
@@ -231,8 +241,11 @@ export type Database = {
           title: string
           type: string | null
           updated_at: string
+          warranty_end: string | null
+          warranty_months: number | null
         }
         Insert: {
+          acceptance_date?: string | null
           amount?: number | null
           client_id?: string | null
           closed_at?: string | null
@@ -241,7 +254,9 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           due_date?: string | null
+          go_live_date?: string | null
           id?: string
+          kickoff_date?: string | null
           note?: string | null
           owner_id?: string | null
           priority?: string
@@ -251,8 +266,11 @@ export type Database = {
           title: string
           type?: string | null
           updated_at?: string
+          warranty_end?: string | null
+          warranty_months?: number | null
         }
         Update: {
+          acceptance_date?: string | null
           amount?: number | null
           client_id?: string | null
           closed_at?: string | null
@@ -261,7 +279,9 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           due_date?: string | null
+          go_live_date?: string | null
           id?: string
+          kickoff_date?: string | null
           note?: string | null
           owner_id?: string | null
           priority?: string
@@ -271,6 +291,8 @@ export type Database = {
           title?: string
           type?: string | null
           updated_at?: string
+          warranty_end?: string | null
+          warranty_months?: number | null
         }
         Relationships: [
           {
@@ -560,59 +582,150 @@ export type Database = {
       }
       contracts: {
         Row: {
+          auto_renew: boolean
           billing_type: string | null
+          client_id: string | null
           contract_amount: number | null
+          contract_no: string | null
+          contract_type: string
           contract_url: string | null
           created_at: string
           created_by: string | null
           dev_fee: number | null
+          end_date: string | null
           id: string
+          included_hours: number | null
           invoice_status: string
           maintenance_fee: number | null
+          maintenance_period: string | null
           next_payment_date: string | null
           note: string | null
           payment_status: string
+          project_id: string | null
+          signed_date: string | null
+          sla_hours: number | null
+          start_date: string | null
+          status: string
           system_id: string | null
+          term_months: number | null
+          title: string | null
           updated_at: string
         }
         Insert: {
+          auto_renew?: boolean
           billing_type?: string | null
+          client_id?: string | null
           contract_amount?: number | null
+          contract_no?: string | null
+          contract_type?: string
           contract_url?: string | null
           created_at?: string
           created_by?: string | null
           dev_fee?: number | null
+          end_date?: string | null
           id?: string
+          included_hours?: number | null
           invoice_status?: string
           maintenance_fee?: number | null
+          maintenance_period?: string | null
           next_payment_date?: string | null
           note?: string | null
           payment_status?: string
+          project_id?: string | null
+          signed_date?: string | null
+          sla_hours?: number | null
+          start_date?: string | null
+          status?: string
           system_id?: string | null
+          term_months?: number | null
+          title?: string | null
           updated_at?: string
         }
         Update: {
+          auto_renew?: boolean
           billing_type?: string | null
+          client_id?: string | null
           contract_amount?: number | null
+          contract_no?: string | null
+          contract_type?: string
           contract_url?: string | null
           created_at?: string
           created_by?: string | null
           dev_fee?: number | null
+          end_date?: string | null
           id?: string
+          included_hours?: number | null
           invoice_status?: string
           maintenance_fee?: number | null
+          maintenance_period?: string | null
           next_payment_date?: string | null
           note?: string | null
           payment_status?: string
+          project_id?: string | null
+          signed_date?: string | null
+          sla_hours?: number | null
+          start_date?: string | null
+          status?: string
           system_id?: string | null
+          term_months?: number | null
+          title?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
           {
             foreignKeyName: "contracts_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
           {
@@ -1015,6 +1128,13 @@ export type Database = {
             referencedRelation: "v_case_summary"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "milestones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
         ]
       }
       opportunities: {
@@ -1116,6 +1236,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "opportunities_converted_project_id_fkey"
+            columns: ["converted_project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "opportunities_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -1186,6 +1313,20 @@ export type Database = {
             columns: ["contract_id"]
             isOneToOne: false
             referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_expiry_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "v_contract_summary"
             referencedColumns: ["id"]
           },
           {
@@ -1269,6 +1410,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
             referencedColumns: ["id"]
           },
           {
@@ -1647,6 +1795,170 @@ export type Database = {
         }
         Relationships: []
       }
+      v_contract_expiry_alerts: {
+        Row: {
+          auto_renew: boolean | null
+          client_id: string | null
+          client_name: string | null
+          contract_no: string | null
+          contract_type: string | null
+          days_to_end: number | null
+          end_date: string | null
+          id: string | null
+          maintenance_period: string | null
+          project_code: string | null
+          project_id: string | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_contract_summary: {
+        Row: {
+          auto_renew: boolean | null
+          billing_type: string | null
+          client_id: string | null
+          client_name: string | null
+          contract_amount: number | null
+          contract_no: string | null
+          contract_type: string | null
+          days_to_end: number | null
+          dev_fee: number | null
+          end_date: string | null
+          id: string | null
+          invoice_status: string | null
+          is_expiring: boolean | null
+          maintenance_fee: number | null
+          maintenance_period: string | null
+          next_payment_date: string | null
+          payment_status: string | null
+          project_code: string | null
+          project_id: string | null
+          project_title: string | null
+          signed_date: string | null
+          start_date: string | null
+          status: string | null
+          system_code: string | null
+          system_id: string | null
+          system_name: string | null
+          term_months: number | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "systems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_system_id_fkey"
+            columns: ["system_id"]
+            isOneToOne: false
+            referencedRelation: "v_maintenance_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_maintenance_alerts: {
         Row: {
           client_name: string | null
@@ -1728,6 +2040,52 @@ export type Database = {
           received: number | null
         }
         Relationships: []
+      }
+      v_warranty_status: {
+        Row: {
+          acceptance_date: string | null
+          client_id: string | null
+          client_name: string | null
+          code: string | null
+          days_left: number | null
+          expired: boolean | null
+          has_active_maintenance: boolean | null
+          id: string | null
+          in_warranty: boolean | null
+          title: string | null
+          warranty_end: string | null
+          warranty_months: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+        ]
       }
     }
     Functions: {
