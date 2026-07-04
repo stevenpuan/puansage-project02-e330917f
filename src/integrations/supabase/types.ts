@@ -2505,6 +2505,85 @@ export type Database = {
         }
         Relationships: []
       }
+      v_project_tasks: {
+        Row: {
+          assignee_id: string | null
+          assignee_name: string | null
+          case_code: string | null
+          case_id: string | null
+          case_status: string | null
+          case_title: string | null
+          client_id: string | null
+          client_name: string | null
+          created_at: string | null
+          description: string | null
+          done_at: string | null
+          due_date: string | null
+          id: string | null
+          overdue: boolean | null
+          priority: string | null
+          status: string | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_tasks_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_due"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "cases_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_receivables_by_client"
+            referencedColumns: ["client_id"]
+          },
+        ]
+      }
       v_receivables_by_client: {
         Row: {
           client_id: string | null
