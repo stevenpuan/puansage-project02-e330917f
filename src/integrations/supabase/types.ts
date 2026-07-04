@@ -56,6 +56,8 @@ export type Database = {
         Row: {
           bucket: string
           created_at: string
+          entity_id: string | null
+          entity_type: string | null
           filename: string | null
           id: string
           mime: string | null
@@ -66,6 +68,8 @@ export type Database = {
         Insert: {
           bucket?: string
           created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
           filename?: string | null
           id?: string
           mime?: string | null
@@ -76,6 +80,8 @@ export type Database = {
         Update: {
           bucket?: string
           created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
           filename?: string | null
           id?: string
           mime?: string | null
