@@ -34,6 +34,7 @@ import { Route as DashboardErrorLogsRouteImport } from './routes/dashboard/error
 import { Route as DashboardDevTodosRouteImport } from './routes/dashboard/dev-todos'
 import { Route as DashboardDevHistoryRouteImport } from './routes/dashboard/dev-history'
 import { Route as DashboardContractsRouteImport } from './routes/dashboard/contracts'
+import { Route as DashboardCommissionsRouteImport } from './routes/dashboard/commissions'
 import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit-logs'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
@@ -171,6 +172,11 @@ const DashboardContractsRoute = DashboardContractsRouteImport.update({
   path: '/contracts',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCommissionsRoute = DashboardCommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAuditLogsRoute = DashboardAuditLogsRouteImport.update({
   id: '/audit-logs',
   path: '/audit-logs',
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
@@ -297,6 +305,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/activity-logs'
     | '/dashboard/audit-logs'
+    | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
@@ -370,6 +380,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/activity-logs'
     | '/dashboard/audit-logs'
+    | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/activity-logs'
     | '/dashboard/audit-logs'
+    | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
@@ -620,6 +632,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardContractsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/commissions': {
+      id: '/dashboard/commissions'
+      path: '/commissions'
+      fullPath: '/dashboard/commissions'
+      preLoaderRoute: typeof DashboardCommissionsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/audit-logs': {
       id: '/dashboard/audit-logs'
       path: '/audit-logs'
@@ -689,6 +708,7 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteChildren {
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
   DashboardAuditLogsRoute: typeof DashboardAuditLogsRoute
+  DashboardCommissionsRoute: typeof DashboardCommissionsRoute
   DashboardContractsRoute: typeof DashboardContractsRoute
   DashboardDevHistoryRoute: typeof DashboardDevHistoryRoute
   DashboardDevTodosRoute: typeof DashboardDevTodosRoute
@@ -723,6 +743,7 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
   DashboardAuditLogsRoute: DashboardAuditLogsRoute,
+  DashboardCommissionsRoute: DashboardCommissionsRoute,
   DashboardContractsRoute: DashboardContractsRoute,
   DashboardDevHistoryRoute: DashboardDevHistoryRoute,
   DashboardDevTodosRoute: DashboardDevTodosRoute,
