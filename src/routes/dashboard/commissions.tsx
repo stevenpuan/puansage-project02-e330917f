@@ -189,7 +189,7 @@ function Page() {
     setEntryForm(null); reloadEntries(); reloadSummary();
   };
   const delEntry = async (r: EntryRow) => {
-    if (!confirm("確定刪除此分成明細？")) return;
+    if (!confirm("確定刪除此獎金明細？")) return;
     const { error } = await supabase.from("commission_entries").delete().eq("id", r.id);
     if (error) { toast.error(error.message); return; }
     toast.success("已刪除"); reloadEntries(); reloadSummary();
@@ -233,13 +233,13 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="業務分成" description="規則、明細與每人分成彙總" />
+      <PageHeader title="業務獎金" description="規則、明細與每人獎金彙總" />
 
       <Tabs defaultValue="summary">
         <TabsList>
-          <TabsTrigger value="summary">每人分成彙總</TabsTrigger>
-          <TabsTrigger value="entries">分成明細</TabsTrigger>
-          <TabsTrigger value="plans">分成規則</TabsTrigger>
+          <TabsTrigger value="summary">每人獎金彙總</TabsTrigger>
+          <TabsTrigger value="entries">獎金明細</TabsTrigger>
+          <TabsTrigger value="plans">獎金規則</TabsTrigger>
         </TabsList>
 
         <TabsContent value="summary" className="space-y-4">
@@ -260,7 +260,7 @@ function Page() {
               </Card>
             ))}
             {summary.length === 0 && (
-              <div className="text-muted-foreground col-span-full text-center py-8">尚無分成資料</div>
+              <div className="text-muted-foreground col-span-full text-center py-8">尚無獎金資料</div>
             )}
           </div>
         </TabsContent>
@@ -269,7 +269,7 @@ function Page() {
           <div className="flex justify-end">
             {canCreate && (
               <Dialog open={!!isNewEntry} onOpenChange={(o) => !o && setEntryForm(null)}>
-                <DialogTrigger asChild><Button onClick={() => setEntryForm({ ...emptyEntry })}>新增分成明細</Button></DialogTrigger>
+                <DialogTrigger asChild><Button onClick={() => setEntryForm({ ...emptyEntry })}>新增獎金明細</Button></DialogTrigger>
                 <EntryDialog form={entryForm} setForm={setEntryForm} save={saveEntry} isNew
                   roleOpts={roleOpts} statusOpts={statusOpts}
                   profiles={profiles} contracts={contractsList} cases={casesList} payments={paymentsList} plans={plans} />
@@ -286,7 +286,7 @@ function Page() {
                     <TableHead>角色</TableHead>
                     <TableHead className="text-right">基數</TableHead>
                     <TableHead className="text-right">%</TableHead>
-                    <TableHead className="text-right">分成金額</TableHead>
+                    <TableHead className="text-right">獎金金額</TableHead>
                     <TableHead>實現</TableHead>
                     <TableHead>實現日</TableHead>
                     <TableHead>期別</TableHead>
@@ -322,7 +322,7 @@ function Page() {
                     </TableRow>
                   ))}
                   {entries.length === 0 && (
-                    <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground py-8">尚無分成明細</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground py-8">尚無獎金明細</TableCell></TableRow>
                   )}
                 </TableBody>
               </Table>
@@ -340,7 +340,7 @@ function Page() {
           <div className="flex justify-end">
             {canCreate && (
               <Dialog open={!!isNewPlan} onOpenChange={(o) => !o && setPlanForm(null)}>
-                <DialogTrigger asChild><Button onClick={() => setPlanForm({ ...emptyPlan })}>新增分成規則</Button></DialogTrigger>
+                <DialogTrigger asChild><Button onClick={() => setPlanForm({ ...emptyPlan })}>新增獎金規則</Button></DialogTrigger>
                 <PlanDialog form={planForm} setForm={setPlanForm} save={savePlan} isNew baseOpts={baseOpts} />
               </Dialog>
             )}
@@ -376,7 +376,7 @@ function Page() {
                     </TableRow>
                   ))}
                   {plans.length === 0 && (
-                    <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">尚無分成規則</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">尚無獎金規則</TableCell></TableRow>
                   )}
                 </TableBody>
               </Table>
