@@ -430,7 +430,7 @@ function EntryDialog({
   };
   return (
     <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-      <DialogHeader><DialogTitle>{isNew ? "新增分成明細" : "編輯分成明細"}</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isNew ? "新增獎金明細" : "編輯獎金明細"}</DialogTitle></DialogHeader>
       <div className="grid gap-3 sm:grid-cols-2">
         <F label="受款人">
           <Select value={form.payee_id} onValueChange={(v) => set("payee_id", v)}>
@@ -490,7 +490,7 @@ function EntryDialog({
         </F>
         <F label="基數金額"><Input type="number" value={form.base_amount} onChange={(e) => onBase(e.target.value)} /></F>
         <F label="百分比 (%)"><Input type="number" value={form.rate} onChange={(e) => onRate(e.target.value)} /></F>
-        <F label="分成金額"><Input type="number" value={form.commission_amount} onChange={(e) => set("commission_amount", e.target.value)} /></F>
+        <F label="獎金金額"><Input type="number" value={form.commission_amount} onChange={(e) => set("commission_amount", e.target.value)} /></F>
         <F label="期別 (例 2026-Q3)"><Input value={form.payout_period} onChange={(e) => set("payout_period", e.target.value)} /></F>
         <F label="發放狀態">
           <Select value={form.payout_status} onValueChange={(v) => set("payout_status", v)}>
@@ -517,7 +517,7 @@ function PlanDialog({
   const set = <K extends keyof PlanForm>(k: K, v: PlanForm[K]) => setForm({ ...form, [k]: v });
   return (
     <DialogContent className="max-w-lg">
-      <DialogHeader><DialogTitle>{isNew ? "新增分成規則" : "編輯分成規則"}</DialogTitle></DialogHeader>
+      <DialogHeader><DialogTitle>{isNew ? "新增獎金規則" : "編輯獎金規則"}</DialogTitle></DialogHeader>
       <div className="grid gap-3 sm:grid-cols-2">
         <F label="名稱" full><Input value={form.name} onChange={(e) => set("name", e.target.value)} /></F>
         <F label="基數">

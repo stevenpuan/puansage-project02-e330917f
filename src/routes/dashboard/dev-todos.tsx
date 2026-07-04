@@ -54,7 +54,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="待辦事項" description="系統開發中待處理的工作項目" actions={can("dev_todos", "create") ? (
+      <PageHeader title="研發待辦" description="系統開發中待處理的工作項目" actions={can("dev_todos", "create") ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild><Button>新增待辦</Button></DialogTrigger>
           <DialogContent>
