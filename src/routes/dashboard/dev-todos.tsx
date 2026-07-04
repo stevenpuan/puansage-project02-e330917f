@@ -54,11 +54,11 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="代辦事項" description="系統開發中待處理的工作項目" actions={can("dev_todos", "create") ? (
+      <PageHeader title="待辦事項" description="系統開發中待處理的工作項目" actions={can("dev_todos", "create") ? (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button>新增代辦</Button></DialogTrigger>
+          <DialogTrigger asChild><Button>新增待辦</Button></DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>新增代辦</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>新增待辦</DialogTitle></DialogHeader>
             <div className="space-y-3">
               <div className="space-y-1"><Label>標題</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
               <div className="space-y-1"><Label>說明</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} /></div>
