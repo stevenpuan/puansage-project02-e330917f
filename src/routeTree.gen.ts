@@ -25,8 +25,6 @@ import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboar
 import { Route as DashboardProjectBoardRouteImport } from './routes/dashboard/project-board'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard/payments'
-import { Route as DashboardProjectBoardRouteImport } from './routes/dashboard/project-board'
-import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
 import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard/opportunities'
 import { Route as DashboardMenuManagementRouteImport } from './routes/dashboard/menu-management'
 import { Route as DashboardLookupsRouteImport } from './routes/dashboard/lookups'
@@ -237,6 +235,17 @@ const DashboardClientsClientIdRoute =
 const DashboardCasesCaseIdRoute = DashboardCasesCaseIdRouteImport.update({
   id: '/cases/$caseId',
   path: '/cases/$caseId',
+  getParentRoute: () => DashboardRoute,
+} as any)
+
+const DashboardProjectBoardRoute = DashboardProjectBoardRouteImport.update({
+  id: '/project-board',
+  path: '/project-board',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProjectDashboardRoute = DashboardProjectDashboardRouteImport.update({
+  id: '/project-dashboard',
+  path: '/project-dashboard',
   getParentRoute: () => DashboardRoute,
 } as any)
 
