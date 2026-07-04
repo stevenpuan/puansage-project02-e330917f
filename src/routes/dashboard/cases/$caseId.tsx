@@ -238,6 +238,9 @@ function Page() {
         </CardContent>
       </Card>
 
+      <WarrantySection caseId={caseId} current={current} set={set} canEdit={canEdit} />
+
+
       <Card>
         <CardHeader className="flex-row items-center justify-between space-y-0">
           <CardTitle>待辦</CardTitle>
