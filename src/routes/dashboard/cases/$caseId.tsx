@@ -734,3 +734,74 @@ function WarrantySection({ caseId, current, set, canEdit }: {
     </Card>
   );
 }
+
+interface CloseoutRow {
+  id: string; status: string | null;
+  has_acceptance: boolean | null; has_warranty: boolean | null;
+  system_registered: boolean | null; open_tasks: number | null;
+  payments_cleared: boolean | null; has_maintenance_contract: boolean | null;
+}
+function CloseoutSection({ caseId, canEdit }: { caseId: string; canEdit: boolean }) {
+  const qc = useQueryClient();
+  const { data: co } = useQuery({
+    queryKey: ["case-closeout", caseId],
+    queryFn: async () => {
+      const { data } = await supabase.from("v_project_closeout").select("*").eq("id", caseId).maybeSingle();
+      return (data ?? null) as CloseoutRow | null;
+    },
+  });
+  if (!co) return null;
+
+  const items: { key: string; label: string; ok: boolean; critical?: boolean }[] = [
+    { key: "acceptance", label: "驗收完成", ok: !!co.has_acceptance, critical: true },
+    { key: "warranty", label: "已設定保固", ok: !!co.has_warranty },
+    { key: "system", label: "系統已登錄", ok: !!co.system_registered },
+    { key: "tasks", label: "無未完成任務", ok: (co.open_tasks ?? 0) === 0, critical: true },
+    { key: "payments", label: "款項已收訖", ok: !!co.payments_cleared, critical: true },
+    { key: "maintenance", label: "已簽維護合約", ok: !!co.has_maintenance_contract },
+  ];
+  const missing = items.filter((i) => i.critical && !i.ok);
+  const alreadyClosed = co.status === "已結案";
+  const canClose = canEdit && !alreadyClosed && missing.length === 0;
+
+  const doClose = async () => {
+    if (!confirm("確定要結案此專案？")) return;
+    const { error } = await supabase.from("cases")
+      .update({ status: "已結案", closed_at: new Date().toISOString() })
+      .eq("id", caseId);
+    if (error) { toast.error(error.message); return; }
+    toast.success("已結案");
+    qc.invalidateQueries({ queryKey: ["case", caseId] });
+    qc.invalidateQueries({ queryKey: ["case-closeout", caseId] });
+  };
+
+  return (
+    <Card>
+      <CardHeader><CardTitle>結案檢核</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <ul className="grid gap-2 sm:grid-cols-2">
+          {items.map((it) => (
+            <li key={it.key} className="flex items-center gap-2 text-sm">
+              <span className={cn(
+                "inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white",
+                it.ok ? "bg-emerald-500" : "bg-destructive"
+              )}>{it.ok ? "✓" : "✕"}</span>
+              <span className={cn(!it.ok && "text-muted-foreground")}>{it.label}</span>
+              {it.critical && <Badge variant="outline" className="text-[10px]">關鍵</Badge>}
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center justify-between gap-3 pt-2 border-t">
+          <div className="text-sm text-muted-foreground">
+            {alreadyClosed
+              ? "此專案已結案"
+              : missing.length > 0
+                ? `尚缺:${missing.map((m) => m.label).join("、")}`
+                : "所有關鍵項皆已達成,可結案"}
+          </div>
+          <Button disabled={!canClose} onClick={doClose}>結案</Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
