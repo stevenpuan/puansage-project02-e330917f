@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { downloadCsv, todayStamp } from "@/lib/csv";
 import { cn } from "@/lib/utils";
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
+} from "recharts";
 
 export const Route = createFileRoute("/dashboard/receivables")({ component: Page });
 
@@ -15,6 +18,7 @@ interface Row {
   client_id: string; code: string; name: string;
   outstanding: number | null; received: number | null; overdue_amount: number | null;
 }
+interface CashRow { month: string; expected_in: number | null; items: number | null }
 const money = (n: number | null | undefined) => `NT$ ${Number(n ?? 0).toLocaleString("zh-TW")}`;
 
 function Page() {
@@ -28,6 +32,15 @@ function Page() {
       return (data ?? []) as Row[];
     },
   });
+  const { data: cash = [] } = useQuery({
+    queryKey: ["cashflow-forecast"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("v_cashflow_forecast" as any).select("*").order("month");
+      if (error) throw error;
+      return (data ?? []) as unknown as CashRow[];
+    },
+  });
+  const chartData = cash.map((c) => ({ month: c.month, expected_in: Number(c.expected_in ?? 0), items: c.items ?? 0 }));
   const totalOut = rows.reduce((s, r) => s + Number(r.outstanding ?? 0), 0);
   const totalOverdue = rows.reduce((s, r) => s + Number(r.overdue_amount ?? 0), 0);
 
@@ -42,6 +55,28 @@ function Page() {
           )}>匯出 CSV</Button>
         )
       } />
+
+      <Card>
+        <CardHeader><CardTitle>未來現金流預測</CardTitle></CardHeader>
+        <CardContent>
+          {chartData.length === 0 ? (
+            <div className="text-sm text-muted-foreground py-8 text-center">尚無預測資料</div>
+          ) : (
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" tickFormatter={(v) => Number(v).toLocaleString("zh-TW")} />
+                  <Tooltip formatter={(v: any, name: string) => name === "expected_in" ? [money(Number(v)), "預計收款"] : [v, "筆數"]} />
+                  <Bar dataKey="expected_in" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Card>

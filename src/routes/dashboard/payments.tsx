@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { downloadCsv, todayStamp } from "@/lib/csv";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/dashboard/payments")({ component: Page });
 
@@ -81,6 +82,7 @@ function Page() {
 
   const [form, setForm] = useState<Partial<Payment> | null>(null);
   const isNew = form && !form.id;
+  const [collectFor, setCollectFor] = useState<Payment | null>(null);
   const numOrNull = (v: unknown) => (v === "" || v == null ? null : Number(v));
   const save = async () => {
     if (!form?.contract_id) { toast.error("請選擇合約"); return; }
@@ -175,6 +177,7 @@ function Page() {
                     <TableCell><Badge variant="outline">{r.invoice_status ?? "—"}</Badge></TableCell>
                     <TableCell className="text-right space-x-2">
                       {canEdit && r.status !== "已收" && <Button size="sm" onClick={() => markPaid(r)}>標記已收</Button>}
+                      {canEdit && r.status !== "已收" && <Button size="sm" variant="outline" onClick={() => setCollectFor(r)}>催收</Button>}
                       {canEdit && <Button size="sm" variant="outline" onClick={() => setForm({ ...r })}>編輯</Button>}
                       {canDelete && <Button size="sm" variant="outline" onClick={() => del(r)}>刪除</Button>}
                     </TableCell>
@@ -193,6 +196,9 @@ function Page() {
         <PaymentForm form={form} setForm={setForm} save={save} isNew={false} contracts={contracts} contractLabel={contractLabel}
           statusOpts={statusOpts} invOpts={invOpts} methodOpts={methodOpts} />
       </Dialog>
+
+      <CollectionDialog payment={collectFor} onClose={() => setCollectFor(null)} />
+
     </div>
   );
 }
@@ -245,4 +251,92 @@ function PaymentForm({ form, setForm, save, isNew, contracts, contractLabel, sta
 }
 function F({ label, children, full }: { label: string; children: React.ReactNode; full?: boolean }) {
   return <div className={cn("space-y-1", full && "sm:col-span-2")}><Label>{label}</Label>{children}</div>;
+}
+
+interface CollectionLog {
+  id: string; payment_id: string; action: string | null;
+  note: string | null; next_follow_date: string | null; created_at: string;
+}
+function CollectionDialog({ payment, onClose }: { payment: Payment | null; onClose: () => void }) {
+  const qc = useQueryClient();
+  const { data: actionOpts = [] } = useLookups("collection_action");
+  const key = ["collection-logs", payment?.id];
+  const { data: logs = [] } = useQuery({
+    queryKey: key,
+    enabled: !!payment,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("collection_logs")
+        .select("*").eq("payment_id", payment!.id).order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as CollectionLog[];
+    },
+  });
+  const [action, setAction] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+  const [next, setNext] = useState<string>("");
+  const add = async () => {
+    if (!payment) return;
+    if (!action) { toast.error("請選擇催收動作"); return; }
+    const { error } = await supabase.from("collection_logs").insert({
+      payment_id: payment.id, action, note: note || null, next_follow_date: next || null,
+    } as any);
+    if (error) { toast.error(error.message); return; }
+    toast.success("已新增催收記錄"); setAction(""); setNote(""); setNext("");
+    qc.invalidateQueries({ queryKey: key });
+  };
+  return (
+    <Dialog open={!!payment} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>催收記錄 · {payment?.title ?? "—"}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>日期</TableHead><TableHead>動作</TableHead>
+                  <TableHead>備註</TableHead><TableHead>下次追蹤</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {logs.map((l) => (
+                  <TableRow key={l.id}>
+                    <TableCell className="text-xs">{new Date(l.created_at).toLocaleString("zh-TW")}</TableCell>
+                    <TableCell><Badge variant="outline">{l.action ?? "—"}</Badge></TableCell>
+                    <TableCell>{l.note ?? "—"}</TableCell>
+                    <TableCell>{l.next_follow_date ?? "—"}</TableCell>
+                  </TableRow>
+                ))}
+                {logs.length === 0 && (
+                  <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-4">尚無記錄</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="space-y-3 border-t pt-4">
+            <div className="text-sm font-medium">新增催收</div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
+                <Label>催收動作</Label>
+                <Select value={action} onValueChange={setAction}>
+                  <SelectTrigger><SelectValue placeholder="選擇" /></SelectTrigger>
+                  <SelectContent>{actionOpts.map((o) => <SelectItem key={o.code} value={o.code}>{o.label}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>下次追蹤日</Label>
+                <Input type="date" value={next} onChange={(e) => setNext(e.target.value)} />
+              </div>
+              <div className="space-y-1 sm:col-span-2">
+                <Label>備註</Label>
+                <Textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <DialogFooter><Button onClick={add}>新增記錄</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
