@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { downloadCsv, todayStamp } from "@/lib/csv";
 import { cn } from "@/lib/utils";
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
+} from "recharts";
 
 export const Route = createFileRoute("/dashboard/receivables")({ component: Page });
 
@@ -15,6 +18,7 @@ interface Row {
   client_id: string; code: string; name: string;
   outstanding: number | null; received: number | null; overdue_amount: number | null;
 }
+interface CashRow { month: string; expected_in: number | null; items: number | null }
 const money = (n: number | null | undefined) => `NT$ ${Number(n ?? 0).toLocaleString("zh-TW")}`;
 
 function Page() {
