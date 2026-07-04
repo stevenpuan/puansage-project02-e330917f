@@ -21,8 +21,12 @@ import { Route as DashboardSystemConfigRouteImport } from './routes/dashboard/sy
 import { Route as DashboardServiceTicketsRouteImport } from './routes/dashboard/service-tickets'
 import { Route as DashboardRolePermissionsRouteImport } from './routes/dashboard/role-permissions'
 import { Route as DashboardReceivablesRouteImport } from './routes/dashboard/receivables'
+import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
+import { Route as DashboardProjectBoardRouteImport } from './routes/dashboard/project-board'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard/payments'
+import { Route as DashboardProjectBoardRouteImport } from './routes/dashboard/project-board'
+import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
 import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard/opportunities'
 import { Route as DashboardMenuManagementRouteImport } from './routes/dashboard/menu-management'
 import { Route as DashboardLookupsRouteImport } from './routes/dashboard/lookups'
@@ -104,6 +108,17 @@ const DashboardRolePermissionsRoute =
 const DashboardReceivablesRoute = DashboardReceivablesRouteImport.update({
   id: '/receivables',
   path: '/receivables',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProjectDashboardRoute =
+  DashboardProjectDashboardRouteImport.update({
+    id: '/project-dashboard',
+    path: '/project-dashboard',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardProjectBoardRoute = DashboardProjectBoardRouteImport.update({
+  id: '/project-board',
+  path: '/project-board',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardProfileRoute = DashboardProfileRouteImport.update({
@@ -245,6 +260,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/project-board': typeof DashboardProjectBoardRoute
+  '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -281,6 +298,8 @@ export interface FileRoutesByTo {
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/project-board': typeof DashboardProjectBoardRoute
+  '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -319,6 +338,8 @@ export interface FileRoutesById {
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/project-board': typeof DashboardProjectBoardRoute
+  '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -358,6 +379,8 @@ export interface FileRouteTypes {
     | '/dashboard/opportunities'
     | '/dashboard/payments'
     | '/dashboard/profile'
+    | '/dashboard/project-board'
+    | '/dashboard/project-dashboard'
     | '/dashboard/receivables'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -394,6 +417,8 @@ export interface FileRouteTypes {
     | '/dashboard/opportunities'
     | '/dashboard/payments'
     | '/dashboard/profile'
+    | '/dashboard/project-board'
+    | '/dashboard/project-dashboard'
     | '/dashboard/receivables'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -431,6 +456,8 @@ export interface FileRouteTypes {
     | '/dashboard/opportunities'
     | '/dashboard/payments'
     | '/dashboard/profile'
+    | '/dashboard/project-board'
+    | '/dashboard/project-dashboard'
     | '/dashboard/receivables'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -539,6 +566,20 @@ declare module '@tanstack/react-router' {
       path: '/receivables'
       fullPath: '/dashboard/receivables'
       preLoaderRoute: typeof DashboardReceivablesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/project-dashboard': {
+      id: '/dashboard/project-dashboard'
+      path: '/project-dashboard'
+      fullPath: '/dashboard/project-dashboard'
+      preLoaderRoute: typeof DashboardProjectDashboardRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/project-board': {
+      id: '/dashboard/project-board'
+      path: '/project-board'
+      fullPath: '/dashboard/project-board'
+      preLoaderRoute: typeof DashboardProjectBoardRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/profile': {
@@ -722,6 +763,8 @@ interface DashboardRouteChildren {
   DashboardOpportunitiesRoute: typeof DashboardOpportunitiesRoute
   DashboardPaymentsRoute: typeof DashboardPaymentsRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardProjectBoardRoute: typeof DashboardProjectBoardRoute
+  DashboardProjectDashboardRoute: typeof DashboardProjectDashboardRoute
   DashboardReceivablesRoute: typeof DashboardReceivablesRoute
   DashboardRolePermissionsRoute: typeof DashboardRolePermissionsRoute
   DashboardServiceTicketsRoute: typeof DashboardServiceTicketsRoute
@@ -757,6 +800,8 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardOpportunitiesRoute: DashboardOpportunitiesRoute,
   DashboardPaymentsRoute: DashboardPaymentsRoute,
   DashboardProfileRoute: DashboardProfileRoute,
+  DashboardProjectBoardRoute: DashboardProjectBoardRoute,
+  DashboardProjectDashboardRoute: DashboardProjectDashboardRoute,
   DashboardReceivablesRoute: DashboardReceivablesRoute,
   DashboardRolePermissionsRoute: DashboardRolePermissionsRoute,
   DashboardServiceTicketsRoute: DashboardServiceTicketsRoute,
