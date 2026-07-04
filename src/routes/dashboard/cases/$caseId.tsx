@@ -673,3 +673,60 @@ function RelatedSection({ clientId }: { clientId: string | null }) {
     </Card>
   );
 }
+
+function WarrantySection({ caseId, current, set, canEdit }: {
+  caseId: string;
+  current: Partial<CaseRow> | null;
+  set: <K extends keyof CaseRow>(k: K, v: CaseRow[K] | string) => void;
+  canEdit: boolean;
+}) {
+  const { data: w } = useQuery({
+    queryKey: ["case-warranty", caseId],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("v_warranty_status" as any)
+        .select("*").eq("id", caseId).maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as WarrantyRow | null;
+    },
+  });
+  const status = w?.in_warranty ? "保固中" : w?.expired ? "已過保固" : "尚未起算";
+  const badgeCls = w?.in_warranty
+    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+    : w?.expired
+    ? "bg-red-100 text-red-800 dark:bg-red-950/50 dark:text-red-300"
+    : "bg-muted text-muted-foreground";
+  const showAlert = !!w?.expired && w?.has_active_maintenance === false;
+  return (
+    <Card>
+      <CardHeader><CardTitle>關鍵日期與保固</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <F label="Kick-off 日"><Input type="date" disabled={!canEdit}
+            value={current?.kickoff_date ?? ""} onChange={(e) => set("kickoff_date", e.target.value)} /></F>
+          <F label="上線日"><Input type="date" disabled={!canEdit}
+            value={current?.go_live_date ?? ""} onChange={(e) => set("go_live_date", e.target.value)} /></F>
+          <F label="驗收日"><Input type="date" disabled={!canEdit}
+            value={current?.acceptance_date ?? ""} onChange={(e) => set("acceptance_date", e.target.value)} /></F>
+          <F label="保固期(月)"><Input type="number" disabled={!canEdit}
+            value={current?.warranty_months ?? ""} onChange={(e) => set("warranty_months", e.target.value)} /></F>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          <span className="text-muted-foreground">保固到期日：</span>
+          <span className="font-medium">{w?.warranty_end ?? "—"}</span>
+          <Badge className={cn("border-0", badgeCls)}>{status}</Badge>
+          {w?.days_left != null && w.in_warranty && (
+            <span className="text-muted-foreground">剩餘 {w.days_left} 天</span>
+          )}
+        </div>
+        {showAlert && (
+          <div className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 p-3 flex items-center justify-between gap-3">
+            <div className="text-sm text-amber-900 dark:text-amber-200">
+              保固已到期,建議簽維護合約
+            </div>
+            <Button asChild size="sm"><Link to="/dashboard/contracts">前往合約管理</Link></Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
