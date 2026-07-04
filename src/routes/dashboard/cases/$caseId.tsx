@@ -26,6 +26,15 @@ interface CaseRow {
   owner_id: string | null; amount: number | null;
   start_date: string | null; due_date: string | null;
   description: string | null; note: string | null;
+  kickoff_date: string | null; go_live_date: string | null;
+  acceptance_date: string | null; warranty_months: number | null;
+  warranty_end: string | null;
+}
+interface WarrantyRow {
+  id: string; acceptance_date: string | null; warranty_months: number | null;
+  warranty_end: string | null; days_left: number | null;
+  in_warranty: boolean | null; expired: boolean | null;
+  has_active_maintenance: boolean | null;
 }
 interface TaskRow {
   id: string; case_id: string; title: string;
