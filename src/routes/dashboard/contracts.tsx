@@ -209,6 +209,15 @@ function Page() {
     qc.invalidateQueries({ queryKey: ["contract-summary"] });
   };
 
+  const genMaintPayments = async (contractId: string) => {
+    if (!confirm("確定為此維護合約產生週期收款？")) return;
+    const { data, error } = await supabase.rpc("gen_maintenance_payments" as any, { p_contract: contractId } as any);
+    if (error) { toast.error(error.message); return; }
+    const n = typeof data === "number" ? data : Number(data ?? 0);
+    toast.success(`已新增 ${n} 筆收款`);
+    qc.invalidateQueries({ queryKey: ["payments"] });
+  };
+
   const typeLabel = (c: string | null) => typeOpts.find((o) => o.code === c)?.label ?? c ?? "—";
   const statusLabel = (c: string | null) => statusOpts.find((o) => o.code === c)?.label ?? c ?? "—";
 
