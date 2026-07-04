@@ -115,12 +115,17 @@ function Page() {
       owner_id: current.owner_id || null, amount: numOrNull(current.amount),
       start_date: current.start_date || null, due_date: current.due_date || null,
       description: current.description || null, note: current.note || null,
+      kickoff_date: current.kickoff_date || null,
+      go_live_date: current.go_live_date || null,
+      acceptance_date: current.acceptance_date || null,
+      warranty_months: numOrNull(current.warranty_months),
     };
     const { error } = await supabase.from("cases").update(payload as any).eq("id", caseId);
     if (error) { toast.error(error.message); return; }
     toast.success("已更新"); setForm(null);
     qc.invalidateQueries({ queryKey: ["case", caseId] });
     qc.invalidateQueries({ queryKey: ["cases-summary"] });
+    qc.invalidateQueries({ queryKey: ["case-warranty", caseId] });
   };
 
   // Tasks
