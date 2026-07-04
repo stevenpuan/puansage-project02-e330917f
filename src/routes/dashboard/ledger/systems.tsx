@@ -100,7 +100,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="系統管理" description="已交付系統的交付狀態、維護到期與技術資訊" actions={
+      <PageHeader title="交付系統" description="已交付系統的交付狀態、維護到期與技術資訊" actions={
         <>
           {canExport && (
             <Button variant="outline" onClick={() => downloadCsv(

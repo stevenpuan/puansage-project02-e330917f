@@ -66,7 +66,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="代碼字典" description="集中維護各種下拉選項" actions={canCreate ? (
+      <PageHeader title="代碼設定" description="集中維護各種下拉選項" actions={canCreate ? (
         <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DialogTrigger asChild><Button>新增代碼</Button></DialogTrigger>
           <DialogContent>

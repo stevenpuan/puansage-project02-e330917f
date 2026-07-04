@@ -46,7 +46,7 @@ function Page() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="應收彙整" description="依客戶彙總的應收、已收與逾期金額" actions={
+      <PageHeader title="應收帳款" description="依客戶彙總的應收、已收與逾期金額" actions={
         canExport && (
           <Button variant="outline" onClick={() => downloadCsv(
             `receivables_${todayStamp()}.csv`,
