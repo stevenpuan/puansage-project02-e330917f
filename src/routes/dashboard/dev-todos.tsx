@@ -77,7 +77,7 @@ function Page() {
           <Table>
             <TableHeader><TableRow><TableHead>標題</TableHead><TableHead>狀態</TableHead><TableHead className="text-right">操作</TableHead></TableRow></TableHeader>
             <TableBody>
-              {rows.length === 0 && <TableRow><TableCell colSpan={3} className="text-center text-muted-foreground py-8">尚無代辦</TableCell></TableRow>}
+              {rows.length === 0 && <TableRow><TableCell colSpan={3} className="text-center text-muted-foreground py-8">尚無待辦</TableCell></TableRow>}
               {rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-medium">{r.title}</TableCell>
