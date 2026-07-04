@@ -335,8 +335,6 @@ export interface FileRoutesById {
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
-  '/dashboard/project-board': typeof DashboardProjectBoardRoute
-  '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/project-board': typeof DashboardProjectBoardRoute
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
