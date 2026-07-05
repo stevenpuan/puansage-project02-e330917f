@@ -43,6 +43,7 @@ import { Route as DashboardCommissionsRouteImport } from './routes/dashboard/com
 import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit-logs'
 import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
+import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
 import { Route as DashboardLedgerSystemsRouteImport } from './routes/dashboard/ledger/systems'
