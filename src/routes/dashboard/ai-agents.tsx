@@ -448,61 +448,112 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
   );
 }
 
+
+
 const TEST_RESOURCES = [
   "cases", "opportunities", "contracts", "clients", "client_contacts",
-  "payments", "invoices", "ledger", "commission",
+  "payments", "invoices", "ledger", "commission", "service_tickets",
 ] as const;
 
-// 通道測試：以真實 psk_ Token 直接呼叫 agent-api（whoami / pack / data）
+const WRITE_RESOURCES = ["cases", "opportunities", "service_tickets"] as const;
+
+// 通道測試：以真實 psk_ Token 直接呼叫 agent-api（whoami / pack / data / write）
 function ChannelTestPanel() {
   const [token, setToken] = useState("");
   const [resource, setResource] = useState<string>("cases");
   const [loading, setLoading] = useState<string | null>(null);
   const [result, setResult] = useState<string>("");
 
+  const [wOp, setWOp] = useState<string>("update");
+  const [wResource, setWResource] = useState<string>("cases");
+  const [wId, setWId] = useState("");
+  const [wData, setWData] = useState('{"status":"done","note":"由 agent 更新"}');
+
   const call = async (action: string, res?: string) => {
     if (!token.trim()) { toast.error("請貼上要測試的 psk_ Token"); return; }
-    setLoading(action);
-    setResult("");
+    setLoading(action); setResult("");
     try {
       const qs = new URLSearchParams({ action });
       if (res) qs.set("resource", res);
       const r = await fetch(`${AGENT_ENDPOINT}?${qs.toString()}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token.trim()}` },
+        method: "POST", headers: { Authorization: `Bearer ${token.trim()}` },
       });
       const text = await r.text();
-      try { setResult(JSON.stringify(JSON.parse(text), null, 2)); }
-      catch { setResult(text); }
-    } catch (e) {
-      setResult(String(e));
-    } finally {
-      setLoading(null);
-    }
+      try { setResult(JSON.stringify(JSON.parse(text), null, 2)); } catch { setResult(text); }
+    } catch (e) { setResult(String(e)); } finally { setLoading(null); }
+  };
+
+  const callWrite = async () => {
+    if (!token.trim()) { toast.error("請貼上要測試的 psk_ Token"); return; }
+    let data: unknown = {};
+    try { data = wData.trim() ? JSON.parse(wData) : {}; }
+    catch { toast.error("data 不是合法 JSON"); return; }
+    setLoading("write"); setResult("");
+    try {
+      const r = await fetch(`${AGENT_ENDPOINT}?action=write`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token.trim()}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ resource: wResource, op: wOp, id: wId.trim() || undefined, data }),
+      });
+      const text = await r.text();
+      try { setResult(JSON.stringify(JSON.parse(text), null, 2)); } catch { setResult(text); }
+    } catch (e) { setResult(String(e)); } finally { setLoading(null); }
   };
 
   return (
-    <div className="p-2 mt-4 border-t pt-4 space-y-3">
+    <div className="p-2 mt-4 border-t pt-4 space-y-4">
       <div className="font-medium text-sm">通道測試（以 Token 實際呼叫 agent-api）</div>
+      <div className="space-y-1">
+        <Label className="text-xs">psk_ Token</Label>
+        <Input value={token} onChange={(e) => setToken(e.target.value)} placeholder="貼上剛發行的 psk_…（僅存於瀏覽器記憶體）" />
+      </div>
+
       <div className="flex flex-wrap items-end gap-2">
-        <div className="space-y-1 flex-1 min-w-[240px]">
-          <Label className="text-xs">psk_ Token</Label>
-          <Input value={token} onChange={(e) => setToken(e.target.value)} placeholder="貼上剛發行的 psk_…（僅存於瀏覽器記憶體）" />
-        </div>
         <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("whoami")}>whoami</Button>
         <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("pack")}>學習包</Button>
         <div className="flex items-end gap-1">
           <Select value={resource} onValueChange={setResource}>
-            <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {TEST_RESOURCES.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-            </SelectContent>
+            <SelectTrigger className="w-[170px] h-9"><SelectValue /></SelectTrigger>
+            <SelectContent>{TEST_RESOURCES.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
           </Select>
           <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("data", resource)}>查資料</Button>
         </div>
       </div>
+
+      <div className="rounded-md border p-3 space-y-2">
+        <div className="text-xs font-medium">寫入測試（write）</div>
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="space-y-1">
+            <Label className="text-xs">op</Label>
+            <Select value={wOp} onValueChange={setWOp}>
+              <SelectTrigger className="w-[110px] h-9"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="update">update</SelectItem>
+                <SelectItem value="create">create</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">resource</Label>
+            <Select value={wResource} onValueChange={setWResource}>
+              <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+              <SelectContent>{WRITE_RESOURCES.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1 flex-1 min-w-[220px]">
+            <Label className="text-xs">id（update 必填）</Label>
+            <Input value={wId} onChange={(e) => setWId(e.target.value)} placeholder="update 時填該筆 uuid；create 留空" />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">data（JSON）</Label>
+          <Textarea rows={3} value={wData} onChange={(e) => setWData(e.target.value)} className="font-mono text-xs" />
+        </div>
+        <Button size="sm" disabled={loading !== null} onClick={callWrite}>送出寫入</Button>
+      </div>
+
       <p className="text-[11px] text-muted-foreground">
-        此面板實際呼叫 agent-api，等同外部 Agent 的請求；回應依該 Token 對應 Agent 的角色權限而定。Token 不會被儲存。
+        實際呼叫 agent-api，等同外部 Agent 的請求；回應依該 Token 對應 Agent 的角色權限而定。Token 不會被儲存。
       </p>
       {(loading || result) && (
         <pre className="max-h-80 overflow-auto rounded bg-muted p-3 text-xs whitespace-pre-wrap break-all">{loading ? `呼叫 ${loading}…` : result}</pre>
