@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Copy, ChevronDown, ChevronRight } from "lucide-react";
+import { Copy, ChevronDown, ChevronRight, Check, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/ai-agents")({ component: Page });
 
@@ -41,6 +41,16 @@ interface TokenRow {
   last_used_at: string | null;
   revoked_at: string | null;
   created_at: string | null;
+  scopes?: string[] | null;
+}
+
+interface ScopeRow {
+  scope: string;
+  category: string;
+  description: string | null;
+  sensitivity: string;
+  reserved: boolean;
+  sort_order: number;
 }
 
 interface PersonaForm {
@@ -316,6 +326,8 @@ function Page() {
   );
 }
 
+const SCOPE_CATEGORIES = ["讀取", "寫入", "高權"] as const;
+
 function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boolean }) {
   const qc = useQueryClient();
   const { data: tokens = [] } = useQuery({
@@ -331,16 +343,37 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
     },
   });
 
+  const { data: scopeCatalog = [] } = useQuery({
+    queryKey: ["agent_scopes"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("agent_scopes")
+        .select("scope,category,description,sensitivity,reserved,sort_order")
+        .order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as ScopeRow[];
+    },
+  });
+
   const [issueOpen, setIssueOpen] = useState(false);
   const [tokenName, setTokenName] = useState("");
   const [tokenExpires, setTokenExpires] = useState("");
+  const [checkedScopes, setCheckedScopes] = useState<Set<string>>(new Set(["me.read"]));
   const [issuedToken, setIssuedToken] = useState<string | null>(null);
+
+  const toggleScope = (s: string) =>
+    setCheckedScopes((prev) => {
+      const n = new Set(prev);
+      n.has(s) ? n.delete(s) : n.add(s);
+      return n;
+    });
 
   const issue = async () => {
     const { data, error } = await supabase.rpc("create_agent_token", {
       p_agent: agentId,
       p_name: tokenName || undefined,
       p_expires: tokenExpires ? new Date(tokenExpires).toISOString() : undefined,
+      p_scopes: [...checkedScopes],
     });
     if (error) { toast.error(error.message); return; }
     setIssuedToken(String(data));
@@ -365,7 +398,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
 
   const closeIssueDialog = (open: boolean) => {
     setIssueOpen(open);
-    if (!open) setIssuedToken(null);
+    if (!open) { setIssuedToken(null); setCheckedScopes(new Set(["me.read"])); }
   };
 
   return (
@@ -373,7 +406,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
       <div className="flex items-center justify-between">
         <div className="font-medium text-sm">API Tokens</div>
         {canManage && (
-          <Button size="sm" onClick={() => { setIssuedToken(null); setIssueOpen(true); }}>發行 Token</Button>
+          <Button size="sm" onClick={() => { setIssuedToken(null); setCheckedScopes(new Set(["me.read"])); setIssueOpen(true); }}>發行 Token</Button>
         )}
       </div>
       <Table>
@@ -381,6 +414,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
           <TableRow>
             <TableHead>名稱</TableHead>
             <TableHead>Prefix</TableHead>
+            <TableHead>Scopes</TableHead>
             <TableHead>到期</TableHead>
             <TableHead>最後使用</TableHead>
             <TableHead>狀態</TableHead>
@@ -389,7 +423,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
         </TableHeader>
         <TableBody>
           {tokens.length === 0 && (
-            <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-4">尚無 Token</TableCell></TableRow>
+            <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-4">尚無 Token</TableCell></TableRow>
           )}
           {tokens.map((t) => {
             const revoked = !!t.revoked_at;
@@ -397,6 +431,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
               <TableRow key={t.id}>
                 <TableCell>{t.name || "-"}</TableCell>
                 <TableCell><code className="text-xs">{t.token_prefix}…</code></TableCell>
+                <TableCell className="text-xs text-muted-foreground">{Array.isArray(t.scopes) ? t.scopes.length : 0}</TableCell>
                 <TableCell className="text-muted-foreground text-xs">{t.expires_at ? new Date(t.expires_at).toLocaleString() : "—"}</TableCell>
                 <TableCell className="text-muted-foreground text-xs">{t.last_used_at ? new Date(t.last_used_at).toLocaleString() : "—"}</TableCell>
                 <TableCell>
@@ -414,7 +449,7 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
       </Table>
 
       <Dialog open={issueOpen} onOpenChange={closeIssueDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader><DialogTitle>發行 API Token</DialogTitle></DialogHeader>
           {issuedToken ? (
             <div className="space-y-3">
@@ -436,6 +471,45 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
             <div className="space-y-3">
               <div className="space-y-1"><Label>名稱</Label><Input value={tokenName} onChange={(e) => setTokenName(e.target.value)} placeholder="例：production" /></div>
               <div className="space-y-1"><Label>到期日（選填）</Label><Input type="datetime-local" value={tokenExpires} onChange={(e) => setTokenExpires(e.target.value)} /></div>
+
+              <div className="rounded-md border p-3 space-y-2">
+                <div className="text-sm font-medium">權限 (SCOPES)</div>
+                {SCOPE_CATEGORIES.map((cat) => {
+                  const items = scopeCatalog.filter((s) => s.category === cat);
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={cat} className="space-y-1.5">
+                      <div className="text-[11px] font-semibold text-muted-foreground">{cat}類</div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {items.map((s) => {
+                          const on = checkedScopes.has(s.scope);
+                          const dis = s.reserved;
+                          return (
+                            <button key={s.scope} type="button" disabled={dis} onClick={() => toggleScope(s.scope)}
+                              className={[
+                                "flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-sm transition-colors",
+                                dis ? "opacity-40 cursor-not-allowed border-border"
+                                  : on ? "border-primary bg-primary/10" : "border-border hover:bg-muted",
+                              ].join(" ")} title={s.description ?? ""}>
+                              <span className={[
+                                "w-4 h-4 rounded border flex items-center justify-center shrink-0",
+                                on ? "bg-primary border-primary text-primary-foreground" : "border-muted-foreground/40",
+                              ].join(" ")}>
+                                {on && <Check className="w-3 h-3" />}
+                              </span>
+                              <code className="text-xs">{s.scope}</code>
+                              {s.reserved && <span className="text-[10px] text-muted-foreground">(保留)</span>}
+                              {s.sensitivity === "high" && <ShieldAlert className="w-3.5 h-3.5 text-red-500" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+                <p className="text-[11px] text-muted-foreground">Token 依勾選的 scope 決定 Agent 能做什麼（SDK 權限）。</p>
+              </div>
+
               <DialogFooter>
                 <Button variant="outline" onClick={() => closeIssueDialog(false)}>取消</Button>
                 <Button onClick={issue}>發行</Button>
@@ -553,7 +627,7 @@ function ChannelTestPanel() {
       </div>
 
       <p className="text-[11px] text-muted-foreground">
-        實際呼叫 agent-api，等同外部 Agent 的請求；回應依該 Token 對應 Agent 的角色權限而定。Token 不會被儲存。
+        實際呼叫 agent-api，等同外部 Agent 的請求；回應依該 Token 的 scope 而定。Token 不會被儲存。
       </p>
       {(loading || result) && (
         <pre className="max-h-80 overflow-auto rounded bg-muted p-3 text-xs whitespace-pre-wrap break-all">{loading ? `呼叫 ${loading}…` : result}</pre>
