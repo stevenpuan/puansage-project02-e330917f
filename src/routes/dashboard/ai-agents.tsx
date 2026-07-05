@@ -338,8 +338,8 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
   const issue = async () => {
     const { data, error } = await supabase.rpc("create_agent_token", {
       p_agent: agentId,
-      p_name: tokenName || null,
-      p_expires: tokenExpires ? new Date(tokenExpires).toISOString() : null,
+      p_name: tokenName || undefined,
+      p_expires: tokenExpires ? new Date(tokenExpires).toISOString() : undefined,
     });
     if (error) { toast.error(error.message); return; }
     setIssuedToken(String(data));
