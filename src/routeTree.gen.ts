@@ -41,6 +41,7 @@ import { Route as DashboardDevHistoryRouteImport } from './routes/dashboard/dev-
 import { Route as DashboardContractsRouteImport } from './routes/dashboard/contracts'
 import { Route as DashboardCommissionsRouteImport } from './routes/dashboard/commissions'
 import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit-logs'
+import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
@@ -213,6 +214,11 @@ const DashboardAuditLogsRoute = DashboardAuditLogsRouteImport.update({
   path: '/audit-logs',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAiAgentsRoute = DashboardAiAgentsRouteImport.update({
+  id: '/ai-agents',
+  path: '/ai-agents',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardActivityLogsRoute = DashboardActivityLogsRouteImport.update({
   id: '/activity-logs',
   path: '/activity-logs',
@@ -261,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
@@ -389,6 +398,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
@@ -430,6 +440,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
@@ -472,6 +483,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
@@ -742,6 +754,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAuditLogsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/ai-agents': {
+      id: '/dashboard/ai-agents'
+      path: '/ai-agents'
+      fullPath: '/dashboard/ai-agents'
+      preLoaderRoute: typeof DashboardAiAgentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/activity-logs': {
       id: '/dashboard/activity-logs'
       path: '/activity-logs'
@@ -803,6 +822,7 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
+  DashboardAiAgentsRoute: typeof DashboardAiAgentsRoute
   DashboardAuditLogsRoute: typeof DashboardAuditLogsRoute
   DashboardCommissionsRoute: typeof DashboardCommissionsRoute
   DashboardContractsRoute: typeof DashboardContractsRoute
@@ -843,6 +863,7 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
+  DashboardAiAgentsRoute: DashboardAiAgentsRoute,
   DashboardAuditLogsRoute: DashboardAuditLogsRoute,
   DashboardCommissionsRoute: DashboardCommissionsRoute,
   DashboardContractsRoute: DashboardContractsRoute,

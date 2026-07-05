@@ -156,7 +156,7 @@ function Page() {
       role_id: form.role_id || null,
       model: form.model || null,
       system_prompt: form.system_prompt || null,
-      persona: form.persona as unknown as Record<string, unknown>,
+      persona: { ...form.persona } as unknown as import("@/integrations/supabase/types").Json,
     };
     const { error } = editing
       ? await supabase.from("ai_agents").update(payload).eq("id", editing.id)
