@@ -43,7 +43,6 @@ import { Route as DashboardCommissionsRouteImport } from './routes/dashboard/com
 import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit-logs'
 import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
-import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
 import { Route as DashboardLedgerSystemsRouteImport } from './routes/dashboard/ledger/systems'
@@ -223,6 +222,11 @@ const DashboardAiAgentsRoute = DashboardAiAgentsRouteImport.update({
 const DashboardActivityLogsRoute = DashboardActivityLogsRouteImport.update({
   id: '/activity-logs',
   path: '/activity-logs',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAiAgentsRoute = DashboardAiAgentsRouteImport.update({
+  id: '/ai-agents',
+  path: '/ai-agents',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardLedgerIndexRoute = DashboardLedgerIndexRouteImport.update({
