@@ -9,7 +9,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Download } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/agent-audit")({ component: Page });
 
@@ -66,6 +66,34 @@ function Page() {
     [rows, agentFilter],
   );
 
+  const exportCsv = () => {
+    const esc = (v: unknown) => {
+      const s = v == null ? "" : typeof v === "string" ? v : JSON.stringify(v);
+      return `"${s.replace(/"/g, '""')}"`;
+    };
+    const header = ["時間", "agent", "op", "target_table", "target_id", "before", "after"];
+    const lines = shown.map((r) => {
+      const { op, agentId } = parseAction(r.action);
+      return [
+        new Date(r.created_at).toLocaleString(),
+        agentName(agentId),
+        op,
+        r.target_table ?? "",
+        r.target_id ?? "",
+        r.before ?? "",
+        r.after ?? "",
+      ].map(esc).join(",");
+    });
+    const csv = "\uFEFF" + [header.map(esc).join(","), ...lines].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `agent-audit-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (!canView) return <div className="p-6 text-muted-foreground">您沒有權限檢視此頁</div>;
 
   return (
@@ -81,6 +109,9 @@ function Page() {
             {agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
           </SelectContent>
         </Select>
+        <Button variant="outline" size="sm" className="ml-auto gap-1.5" disabled={shown.length === 0} onClick={exportCsv}>
+          <Download className="w-4 h-4" /> 匯出 CSV（{shown.length}）
+        </Button>
       </div>
 
       <Card><CardContent className="p-0">
