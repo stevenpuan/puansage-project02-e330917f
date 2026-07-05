@@ -229,7 +229,7 @@ function Page() {
               {agents.map((a) => {
                 const isOpen = !!expanded[a.id];
                 return (
-                  <React.Fragment key={a.id}>
+                  <Fragment key={a.id}>
                     <TableRow>
                       <TableCell>
                         <Button variant="ghost" size="icon" onClick={() => setExpanded((s) => ({ ...s, [a.id]: !s[a.id] }))}>
@@ -255,7 +255,7 @@ function Page() {
                         </TableCell>
                       </TableRow>
                     )}
-                  </React.Fragment>
+                  </Fragment>
                 );
               })}
             </TableBody>
