@@ -268,7 +268,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
-  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
@@ -310,7 +309,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
-  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
@@ -355,7 +353,6 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
-  '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
@@ -402,7 +399,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/activity-logs'
     | '/dashboard/ai-agents'
-    | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
@@ -444,7 +440,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard/activity-logs'
-    | '/dashboard/ai-agents'
     | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
@@ -488,7 +483,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
-    | '/dashboard/ai-agents'
     | '/dashboard/ai-agents'
     | '/dashboard/audit-logs'
     | '/dashboard/commissions'
@@ -774,13 +768,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardActivityLogsRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/ai-agents': {
-      id: '/dashboard/ai-agents'
-      path: '/ai-agents'
-      fullPath: '/dashboard/ai-agents'
-      preLoaderRoute: typeof DashboardAiAgentsRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/ledger/': {
       id: '/dashboard/ledger/'
       path: '/ledger'
@@ -836,7 +823,6 @@ declare module '@tanstack/react-router' {
 interface DashboardRouteChildren {
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
   DashboardAiAgentsRoute: typeof DashboardAiAgentsRoute
-  DashboardAiAgentsRoute: typeof DashboardAiAgentsRoute
   DashboardAuditLogsRoute: typeof DashboardAuditLogsRoute
   DashboardCommissionsRoute: typeof DashboardCommissionsRoute
   DashboardContractsRoute: typeof DashboardContractsRoute
@@ -877,7 +863,6 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
-  DashboardAiAgentsRoute: DashboardAiAgentsRoute,
   DashboardAiAgentsRoute: DashboardAiAgentsRoute,
   DashboardAuditLogsRoute: DashboardAuditLogsRoute,
   DashboardCommissionsRoute: DashboardCommissionsRoute,
