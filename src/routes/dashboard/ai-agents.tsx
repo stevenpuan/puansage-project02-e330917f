@@ -252,6 +252,7 @@ function Page() {
                       <TableRow key={a.id + "-tokens"}>
                         <TableCell colSpan={7} className="bg-muted/30">
                           <TokensPanel agentId={a.id} canManage={canEdit} />
+                          <ChannelTestPanel />
                         </TableCell>
                       </TableRow>
                     )}
@@ -443,6 +444,69 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+const TEST_RESOURCES = [
+  "cases", "opportunities", "contracts", "clients", "client_contacts",
+  "payments", "invoices", "ledger", "commission",
+] as const;
+
+// 通道測試：以真實 psk_ Token 直接呼叫 agent-api（whoami / pack / data）
+function ChannelTestPanel() {
+  const [token, setToken] = useState("");
+  const [resource, setResource] = useState<string>("cases");
+  const [loading, setLoading] = useState<string | null>(null);
+  const [result, setResult] = useState<string>("");
+
+  const call = async (action: string, res?: string) => {
+    if (!token.trim()) { toast.error("請貼上要測試的 psk_ Token"); return; }
+    setLoading(action);
+    setResult("");
+    try {
+      const qs = new URLSearchParams({ action });
+      if (res) qs.set("resource", res);
+      const r = await fetch(`${AGENT_ENDPOINT}?${qs.toString()}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token.trim()}` },
+      });
+      const text = await r.text();
+      try { setResult(JSON.stringify(JSON.parse(text), null, 2)); }
+      catch { setResult(text); }
+    } catch (e) {
+      setResult(String(e));
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  return (
+    <div className="p-2 mt-4 border-t pt-4 space-y-3">
+      <div className="font-medium text-sm">通道測試（以 Token 實際呼叫 agent-api）</div>
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="space-y-1 flex-1 min-w-[240px]">
+          <Label className="text-xs">psk_ Token</Label>
+          <Input value={token} onChange={(e) => setToken(e.target.value)} placeholder="貼上剛發行的 psk_…（僅存於瀏覽器記憶體）" />
+        </div>
+        <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("whoami")}>whoami</Button>
+        <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("pack")}>學習包</Button>
+        <div className="flex items-end gap-1">
+          <Select value={resource} onValueChange={setResource}>
+            <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {TEST_RESOURCES.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button size="sm" variant="outline" disabled={loading !== null} onClick={() => call("data", resource)}>查資料</Button>
+        </div>
+      </div>
+      <p className="text-[11px] text-muted-foreground">
+        此面板實際呼叫 agent-api，等同外部 Agent 的請求；回應依該 Token 對應 Agent 的角色權限而定。Token 不會被儲存。
+      </p>
+      {(loading || result) && (
+        <pre className="max-h-80 overflow-auto rounded bg-muted p-3 text-xs whitespace-pre-wrap break-all">{loading ? `呼叫 ${loading}…` : result}</pre>
+      )}
     </div>
   );
 }
