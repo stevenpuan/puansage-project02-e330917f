@@ -52,6 +52,112 @@ export type Database = {
           },
         ]
       }
+      ai_agent_tokens: {
+        Row: {
+          agent_id: string | null
+          created_at: string | null
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          last_used_at: string | null
+          name: string | null
+          revoked_at: string | null
+          scopes: Json | null
+          token_hash: string
+          token_prefix: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string | null
+          revoked_at?: string | null
+          scopes?: Json | null
+          token_hash: string
+          token_prefix?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string | null
+          revoked_at?: string | null
+          scopes?: Json | null
+          token_hash?: string
+          token_prefix?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_tokens_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agents: {
+        Row: {
+          avatar_url: string | null
+          code: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          model: string | null
+          name: string
+          persona: Json | null
+          role_id: string | null
+          status: string
+          system_prompt: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          code?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          model?: string | null
+          name: string
+          persona?: Json | null
+          role_id?: string | null
+          status?: string
+          system_prompt?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          code?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          model?: string | null
+          name?: string
+          persona?: Json | null
+          role_id?: string | null
+          status?: string
+          system_prompt?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agents_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attachments: {
         Row: {
           bucket: string
@@ -3070,6 +3176,10 @@ export type Database = {
     }
     Functions: {
       convert_opportunity: { Args: { p_opp: string }; Returns: string }
+      create_agent_token: {
+        Args: { p_agent: string; p_expires?: string; p_name?: string }
+        Returns: string
+      }
       daily_maintenance: { Args: never; Returns: Json }
       gen_maintenance_payments: {
         Args: { p_contract: string }
@@ -3081,6 +3191,15 @@ export type Database = {
       user_can: {
         Args: { p_action: string; p_module: string }
         Returns: boolean
+      }
+      verify_agent_token: {
+        Args: { p_token: string }
+        Returns: {
+          agent_id: string
+          agent_name: string
+          role_id: string
+          status: string
+        }[]
       }
     }
     Enums: {
