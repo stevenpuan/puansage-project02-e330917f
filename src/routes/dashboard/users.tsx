@@ -193,7 +193,7 @@ function UsersPage() {
       {isLoading ? (
         <p className="text-muted-foreground">載入中…</p>
       ) : (
-        <Tabs defaultValue="pending">
+        <Tabs defaultValue="active">
           <TabsList>
             <TabsTrigger value="pending">待審核 ({pending.length})</TabsTrigger>
             <TabsTrigger value="active">已啟用 ({active.length})</TabsTrigger>

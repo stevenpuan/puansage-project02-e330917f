@@ -14,6 +14,7 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
+import { useRemeasureKey } from "@/lib/use-remeasure-key";
 
 const PIE_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#84cc16", "#ec4899"];
 
@@ -32,6 +33,7 @@ interface OpenTaskRow {
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
 function DashboardHome() {
+  const rk = useRemeasureKey();
   const { user, profile } = useAuth();
   const qc = useQueryClient();
 
@@ -137,13 +139,13 @@ function DashboardHome() {
           <CardHeader className="pb-2"><CardTitle className="text-base">近 12 個月收款</CardTitle></CardHeader>
           <CardContent>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key={rk} width="100%" height="100%">
                 <BarChart data={monthly}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="month" fontSize={12} />
                   <YAxis fontSize={12} tickFormatter={(v) => Number(v).toLocaleString("zh-TW")} />
                   <Tooltip formatter={(v: number) => `NT$ ${Number(v).toLocaleString("zh-TW")}`} />
-                  <Bar dataKey="received" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="received" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -153,7 +155,7 @@ function DashboardHome() {
           <CardHeader className="pb-2"><CardTitle className="text-base">專案狀態分佈</CardTitle></CardHeader>
           <CardContent>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key={rk} width="100%" height="100%">
                 <PieChart>
                   <Pie data={caseStatus} dataKey="count" nameKey="status" outerRadius={90} label>
                     {caseStatus.map((_, i) => (

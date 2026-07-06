@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
+import { useRemeasureKey } from "@/lib/use-remeasure-key";
 
 export const Route = createFileRoute("/dashboard/receivables")({ component: Page });
 
@@ -22,6 +23,7 @@ interface CashRow { month: string; expected_in: number | null; items: number | n
 const money = (n: number | null | undefined) => `NT$ ${Number(n ?? 0).toLocaleString("zh-TW")}`;
 
 function Page() {
+  const rk = useRemeasureKey();
   const { can } = useAuth();
   const canExport = can("finance", "view");
   const { data: rows = [] } = useQuery({
@@ -63,13 +65,13 @@ function Page() {
             <div className="text-sm text-muted-foreground py-8 text-center">尚無預測資料</div>
           ) : (
             <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key={rk} width="100%" height="100%">
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="month" className="text-xs" />
                   <YAxis className="text-xs" tickFormatter={(v) => Number(v).toLocaleString("zh-TW")} />
                   <Tooltip formatter={(v: any, name: string) => name === "expected_in" ? [money(Number(v)), "預計收款"] : [v, "筆數"]} />
-                  <Bar dataKey="expected_in" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="expected_in" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
