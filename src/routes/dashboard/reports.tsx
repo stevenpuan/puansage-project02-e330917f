@@ -12,17 +12,18 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
+import { useRemeasureKey } from "@/lib/use-remeasure-key";
 import { Printer, Download } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/reports")({ component: Page });
 
 const COLORS = [
-  "hsl(var(--primary))",
-  "hsl(var(--chart-2, 199 89% 48%))",
-  "hsl(var(--chart-3, 142 71% 45%))",
-  "hsl(var(--chart-4, 32 95% 55%))",
-  "hsl(var(--chart-5, 340 82% 60%))",
-  "hsl(var(--muted-foreground))",
+  "#3b82f6",
+  "#06b6d4",
+  "#10b981",
+  "#f59e0b",
+  "#ec4899",
+  "#94a3b8",
 ];
 
 interface Monthly { month: string; received: number | null }
@@ -35,6 +36,7 @@ interface Payment { status: string | null; amount: number | null; paid_date: str
 interface Task { status: string | null; overdue: boolean | null }
 
 function Page() {
+  const rk = useRemeasureKey();
   const { can } = useAuth();
   if (!can("reports", "view")) {
     return <div className="p-6 text-muted-foreground">您沒有檢視營運報表的權限。</div>;
@@ -152,7 +154,7 @@ function Page() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="近 12 月收款">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer key={rk} width="100%" height={260}>
             <BarChart data={monthly}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" fontSize={12} />
@@ -164,7 +166,7 @@ function Page() {
         </ChartCard>
 
         <ChartCard title="未來現金流預測">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer key={rk} width="100%" height={260}>
             <BarChart data={cashflow}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" fontSize={12} />
@@ -176,7 +178,7 @@ function Page() {
         </ChartCard>
 
         <ChartCard title="應收帳款(依客戶)">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer key={rk} width="100%" height={260}>
             <BarChart data={ar.slice(0, 10)} layout="vertical" margin={{ left: 60 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" fontSize={12} />
@@ -190,7 +192,7 @@ function Page() {
         </ChartCard>
 
         <ChartCard title="業務漏斗">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer key={rk} width="100%" height={260}>
             <BarChart data={funnel}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="status" fontSize={12} />
@@ -205,7 +207,7 @@ function Page() {
         </ChartCard>
 
         <ChartCard title="專案狀態分佈">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer key={rk} width="100%" height={260}>
             <PieChart>
               <Pie data={casePie} dataKey="value" nameKey="name" outerRadius={90} label>
                 {casePie.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}

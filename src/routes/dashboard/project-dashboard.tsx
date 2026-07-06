@@ -11,6 +11,7 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
+import { useRemeasureKey } from "@/lib/use-remeasure-key";
 
 export const Route = createFileRoute("/dashboard/project-dashboard")({ component: Page });
 
@@ -24,9 +25,10 @@ interface CaseRow {
   milestone_done: number | null; milestone_total: number | null; member_count: number | null;
 }
 
-const COLORS = ["hsl(var(--primary))", "hsl(var(--chart-2, 199 89% 48%))", "hsl(var(--chart-3, 142 71% 45%))", "hsl(var(--muted-foreground))"];
+const COLORS = ["#3b82f6", "#06b6d4", "#10b981", "#94a3b8"];
 
 function Page() {
+  const rk = useRemeasureKey();
   const { data: tasks = [] } = useQuery({
     queryKey: ["v-project-tasks"],
     queryFn: async () => {
@@ -99,7 +101,7 @@ function Page() {
               <div className="text-sm text-muted-foreground py-8 text-center">尚無任務</div>
             ) : (
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer key={rk} width="100%" height="100%">
                   <PieChart>
                     <Pie data={statusPie} dataKey="value" nameKey="name" outerRadius={90} label>
                       {statusPie.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -120,13 +122,13 @@ function Page() {
               <div className="text-sm text-muted-foreground py-8 text-center">尚無資料</div>
             ) : (
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer key={rk} width="100%" height="100%">
                   <BarChart data={memberLoad}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis dataKey="name" className="text-xs" />
                     <YAxis className="text-xs" allowDecimals={false} />
                     <Tooltip />
-                    <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -142,16 +144,16 @@ function Page() {
             <div className="text-sm text-muted-foreground py-8 text-center">尚無專案</div>
           ) : (
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key={rk} width="100%" height="100%">
                 <BarChart data={caseProgress}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="code" className="text-xs" />
                   <YAxis className="text-xs" allowDecimals={false} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="milestone_done" name="里程碑完成" fill="hsl(var(--primary))" />
-                  <Bar dataKey="milestone_total" name="里程碑總數" fill="hsl(var(--muted-foreground))" />
-                  <Bar dataKey="open_tasks" name="未完成任務" fill="hsl(var(--destructive))" />
+                  <Bar dataKey="milestone_done" name="里程碑完成" fill="#3b82f6" />
+                  <Bar dataKey="milestone_total" name="里程碑總數" fill="#94a3b8" />
+                  <Bar dataKey="open_tasks" name="未完成任務" fill="#ef4444" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
