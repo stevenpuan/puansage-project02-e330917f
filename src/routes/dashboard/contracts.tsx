@@ -183,13 +183,13 @@ function Page() {
       end_date: form.end_date || null,
       term_months: numOrNull(form.term_months),
       auto_renew: !!form.auto_renew,
-      status: form.status || null,
+      status: form.status || "active",
       maintenance_period: form.contract_type === "maintenance" ? (form.maintenance_period || null) : null,
       included_hours: numOrNull(form.included_hours),
       sla_hours: numOrNull(form.sla_hours),
       next_payment_date: form.next_payment_date || null,
-      payment_status: form.payment_status || null,
-      invoice_status: form.invoice_status || null,
+      payment_status: form.payment_status || "未收",
+      invoice_status: form.invoice_status || "未開",
       note: form.note || null,
     };
     const { error } = form.id

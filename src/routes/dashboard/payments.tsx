@@ -91,7 +91,7 @@ function Page() {
       amount: numOrNull(form.amount), due_date: form.due_date || null,
       paid_date: form.paid_date || null,
       status: form.status || "未收", method: form.method || null,
-      invoice_no: form.invoice_no || null, invoice_status: form.invoice_status || null,
+      invoice_no: form.invoice_no || null, invoice_status: form.invoice_status || "未開",
       note: form.note || null,
     };
     const { error } = isNew
