@@ -40,6 +40,7 @@ interface EntryRow {
   contract_id: string | null; project_id: string | null; payment_id: string | null;
   deal_role: string | null; plan_id: string | null;
   base_amount: number | null; rate: number | null; commission_amount: number | null;
+  company_amount: number | null;
   payout_period: string | null; payout_status: string;
   realized: boolean; realized_on: string | null;
   note: string | null;
@@ -53,13 +54,14 @@ interface EntryForm {
   contract_id: string | null; project_id: string | null; payment_id: string | null;
   deal_role: string | null; plan_id: string | null;
   base_amount: string | number; rate: string | number; commission_amount: string | number;
+  company_amount: string | number;
   payout_period: string; payout_status: string;
   note: string;
 }
 const emptyEntry: EntryForm = {
   payee_id: "", contract_id: null, project_id: null, payment_id: null,
   deal_role: null, plan_id: null,
-  base_amount: "", rate: "", commission_amount: "",
+  base_amount: "", rate: "", commission_amount: "", company_amount: "",
   payout_period: "", payout_status: "pending", note: "",
 };
 
@@ -159,7 +161,7 @@ function Page() {
     id: r.id, payee_id: r.payee_id,
     contract_id: r.contract_id, project_id: r.project_id, payment_id: r.payment_id,
     deal_role: r.deal_role, plan_id: r.plan_id,
-    base_amount: r.base_amount ?? "", rate: r.rate ?? "", commission_amount: r.commission_amount ?? "",
+    base_amount: r.base_amount ?? "", rate: r.rate ?? "", commission_amount: r.commission_amount ?? "", company_amount: r.company_amount ?? "",
     payout_period: r.payout_period ?? "", payout_status: r.payout_status ?? "pending",
     note: r.note ?? "",
   });
@@ -177,6 +179,7 @@ function Page() {
       base_amount: numOrNull(entryForm.base_amount),
       rate: numOrNull(entryForm.rate),
       commission_amount: numOrNull(entryForm.commission_amount),
+      company_amount: Number(entryForm.company_amount) || 0,
       payout_period: entryForm.payout_period || null,
       payout_status: entryForm.payout_status || "pending",
       note: entryForm.note || null,
@@ -491,6 +494,7 @@ function EntryDialog({
         <F label="基數金額"><Input type="number" value={form.base_amount} onChange={(e) => onBase(e.target.value)} /></F>
         <F label="百分比 (%)"><Input type="number" value={form.rate} onChange={(e) => onRate(e.target.value)} /></F>
         <F label="獎金金額"><Input type="number" value={form.commission_amount} onChange={(e) => set("commission_amount", e.target.value)} /></F>
+        <F label="給公司金額（進基金）"><Input type="number" value={form.company_amount} onChange={(e) => set("company_amount", e.target.value)} /></F>
         <F label="期別 (例 2026-Q3)"><Input value={form.payout_period} onChange={(e) => set("payout_period", e.target.value)} /></F>
         <F label="發放狀態">
           <Select value={form.payout_status} onValueChange={(v) => set("payout_status", v)}>

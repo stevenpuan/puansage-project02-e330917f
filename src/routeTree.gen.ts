@@ -22,6 +22,7 @@ import { Route as DashboardServiceTicketsRouteImport } from './routes/dashboard/
 import { Route as DashboardRolePermissionsRouteImport } from './routes/dashboard/role-permissions'
 import { Route as DashboardReportsRouteImport } from './routes/dashboard/reports'
 import { Route as DashboardRenewalsRouteImport } from './routes/dashboard/renewals'
+import { Route as DashboardFundRouteImport } from './routes/dashboard/fund'
 import { Route as DashboardCalendarRouteImport } from './routes/dashboard/calendar'
 import { Route as DashboardWorkspaceRouteImport } from './routes/dashboard/workspace'
 import { Route as DashboardAgentPromptRouteImport } from './routes/dashboard/agent-prompt'
@@ -118,6 +119,11 @@ const DashboardReportsRoute = DashboardReportsRouteImport.update({
 const DashboardRenewalsRoute = DashboardRenewalsRouteImport.update({
   id: '/renewals',
   path: '/renewals',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardFundRoute = DashboardFundRouteImport.update({
+  id: '/fund',
+  path: '/fund',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
@@ -351,6 +358,7 @@ export interface FileRoutesByTo {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
@@ -446,6 +455,7 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
+    | '/dashboard/fund'
     | '/dashboard/calendar'
     | '/dashboard/workspace'
     | '/dashboard/agent-prompt'
@@ -491,6 +501,7 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
+    | '/dashboard/fund'
     | '/dashboard/calendar'
     | '/dashboard/workspace'
     | '/dashboard/agent-prompt'
@@ -537,6 +548,7 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
+    | '/dashboard/fund'
     | '/dashboard/calendar'
     | '/dashboard/workspace'
     | '/dashboard/agent-prompt'
@@ -655,6 +667,13 @@ declare module '@tanstack/react-router' {
       path: '/renewals'
       fullPath: '/dashboard/renewals'
       preLoaderRoute: typeof DashboardRenewalsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/fund': {
+      id: '/dashboard/fund'
+      path: '/fund'
+      fullPath: '/dashboard/fund'
+      preLoaderRoute: typeof DashboardFundRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/calendar': {
@@ -900,6 +919,7 @@ interface DashboardRouteChildren {
   DashboardQuotesRoute: typeof DashboardQuotesRoute
   DashboardReceivablesRoute: typeof DashboardReceivablesRoute
   DashboardRenewalsRoute: typeof DashboardRenewalsRoute
+  DashboardFundRoute: typeof DashboardFundRoute
   DashboardCalendarRoute: typeof DashboardCalendarRoute
   DashboardWorkspaceRoute: typeof DashboardWorkspaceRoute
   DashboardAgentPromptRoute: typeof DashboardAgentPromptRoute
@@ -944,6 +964,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardQuotesRoute: DashboardQuotesRoute,
   DashboardReceivablesRoute: DashboardReceivablesRoute,
   DashboardRenewalsRoute: DashboardRenewalsRoute,
+  DashboardFundRoute: DashboardFundRoute,
   DashboardCalendarRoute: DashboardCalendarRoute,
   DashboardWorkspaceRoute: DashboardWorkspaceRoute,
   DashboardAgentPromptRoute: DashboardAgentPromptRoute,
