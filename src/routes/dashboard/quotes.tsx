@@ -100,7 +100,8 @@ function Page() {
   const total = subtotal + tax;
 
   const openNew = () => {
-    setForm({ ...emptyForm, status: statusOpts[0]?.code ?? "draft" });
+    const seq = String(rows.length + 1).padStart(3, "0");
+    setForm({ ...emptyForm, quote_no: `Q-${new Date().getFullYear()}-${seq}`, status: statusOpts[0]?.code ?? "draft" });
     setItems([]);
   };
   const openEdit = async (id: string) => {
@@ -146,7 +147,7 @@ function Page() {
     if (items.length) {
       const payloads = items.map((i, idx) => ({
         quote_id: quoteId, description: i.description, qty: i.qty,
-        unit_price: i.unit_price, amount: i.amount, sort_order: idx,
+        unit_price: i.unit_price, sort_order: idx,
       }));
       const { error: e2 } = await supabase.from("quote_items").insert(payloads as any);
       if (e2) { toast.error(e2.message); return; }
