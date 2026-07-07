@@ -149,7 +149,7 @@ function Page() {
       description: form.description || null,
       assignee_id: form.assignee_id || null,
       status: form.status || "待辦",
-      priority: form.priority || null,
+      priority: form.priority || "medium",
       due_date: form.due_date || null,
     };
     if (form.status === "完成") payload.done_at = new Date().toISOString();

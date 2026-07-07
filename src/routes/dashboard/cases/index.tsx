@@ -102,7 +102,7 @@ function Page() {
     const payload = {
       code: form.code, title: form.title,
       client_id: form.client_id || null, system_id: form.system_id || null,
-      type: form.type || null, status: form.status || statusOpts[0]?.code || null, priority: form.priority || null,
+      type: form.type || null, status: form.status || statusOpts[0]?.code || "進行中", priority: form.priority || "medium",
       owner_id: form.owner_id || null, amount: numOrNull(form.amount),
       start_date: form.start_date || null, due_date: form.due_date || null,
       description: form.description || null, note: form.note || null,

@@ -111,7 +111,7 @@ function Page() {
     const payload = {
       code: current.code, title: current.title,
       client_id: current.client_id || null, system_id: current.system_id || null,
-      type: current.type || null, status: current.status || null, priority: current.priority || null,
+      type: current.type || null, status: current.status || "進行中", priority: current.priority || "medium",
       owner_id: current.owner_id || null, amount: numOrNull(current.amount),
       start_date: current.start_date || null, due_date: current.due_date || null,
       description: current.description || null, note: current.note || null,
@@ -146,7 +146,7 @@ function Page() {
     if (!tForm?.title) { toast.error("請填寫標題"); return; }
     const payload = {
       case_id: caseId, title: tForm.title,
-      status: tForm.status || null, priority: tForm.priority || null,
+      status: tForm.status || "待辦", priority: tForm.priority || "medium",
       assignee_id: tForm.assignee_id || null, due_date: tForm.due_date || null,
       description: tForm.description || null,
     };
@@ -376,7 +376,7 @@ function MilestonesSection({ projectId, canEdit, canCreate, canDelete }: {
     if (!form?.title) { toast.error("請填寫標題"); return; }
     const payload = {
       project_id: projectId, title: form.title,
-      status: form.status || null, due_date: form.due_date || null,
+      status: form.status || "待開始", due_date: form.due_date || null,
       note: form.note || null,
       sort_order: form.sort_order == null || (form.sort_order as unknown as string) === "" ? null : Number(form.sort_order),
     };
