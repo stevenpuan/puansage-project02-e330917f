@@ -378,7 +378,7 @@ function MilestonesSection({ projectId, canEdit, canCreate, canDelete }: {
       project_id: projectId, title: form.title,
       status: form.status || "待開始", due_date: form.due_date || null,
       note: form.note || null,
-      sort_order: form.sort_order == null || (form.sort_order as unknown as string) === "" ? null : Number(form.sort_order),
+      sort_order: form.sort_order == null || (form.sort_order as unknown as string) === "" ? 0 : Number(form.sort_order),
     };
     const { error } = isNew
       ? await supabase.from("milestones").insert(payload as any)
@@ -509,7 +509,7 @@ function MembersSection({ projectId, canEdit, canDelete, profiles }: {
   const add = async () => {
     if (!userId) { toast.error("請選擇成員"); return; }
     const { error } = await supabase.from("project_members").insert({
-      project_id: projectId, user_id: userId, role_in_project: role || null,
+      project_id: projectId, user_id: userId, role_in_project: role || "成員",
     } as any);
     if (error) { toast.error(error.message); return; }
     toast.success("已新增"); setOpen(false); setUserId(""); setRole(""); reload();
