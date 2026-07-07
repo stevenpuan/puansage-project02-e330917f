@@ -11,6 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/dashboard/agent-prompt")({ component: Page });
 
 const BASE = "https://oxtozbvbyjwokwisrghm.supabase.co/functions/v1/agent-api";
+const MANUAL_URL = "https://oxtozbvbyjwokwisrghm.supabase.co/functions/v1/agent-manual";
 
 interface Sys {
   id: string; title: string; scope: string; write: boolean; sensitive?: "medium" | "high";
@@ -120,12 +121,18 @@ function Page() {
   const copyClipboard = async () => {
     if (checked.size === 0) { toast.error("請至少勾選一個系統"); return; }
     await navigator.clipboard.writeText(build());
-    toast.success("已複製到剪貼簿");
+    toast.success("已複製內容");
+  };
+  const manualUrl = () =>
+    checked.size === 0 ? MANUAL_URL : MANUAL_URL + "?systems=" + [...checked].join(",");
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(manualUrl());
+    toast.success("已複製連結");
   };
 
   return (
     <div className="space-y-6">
-      <PageHeader title="AI 操作提示詞" description="勾選 AI Agent 可以使用的系統，下載成提示詞檔（含使用限制與 Agent 要求）餵給 Agent" />
+      <PageHeader title="AI 操作提示詞" description="勾選 AI Agent 可用的系統，產生提示詞：可下載/複製內容，或複製連結直接給 Agent 讀取" />
 
       <Card>
         <CardContent className="py-4 space-y-3">
@@ -152,12 +159,14 @@ function Page() {
             ))}
           </div>
 
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-wrap gap-2 pt-2">
             <Button onClick={download}>⬇ 下載提示詞 (.md)</Button>
-            <Button variant="outline" onClick={copyClipboard}>複製到剪貼簿</Button>
+            <Button variant="outline" onClick={copyClipboard}>複製內容</Button>
+            <Button variant="outline" onClick={copyLink}>🔗 複製連結</Button>
           </div>
+          <div className="rounded bg-muted p-2 text-xs font-mono break-all">{manualUrl()}</div>
           <p className="text-xs text-muted-foreground">
-            檔案內容 = 使用限制 + 對 Agent 的要求 + API 介面 + 你勾選的系統操作說明。下載後可貼進 Agent 的系統提示，或放進「知識庫」讓 Agent 用 pack 拉取。
+            兩種餵給 Agent 的方式：① 下載或「複製內容」貼進系統提示；② 直接把上方<b>連結</b>給 Agent，它用 GET 就能取得同樣內容（依勾選系統過濾；未勾選＝全部）。內容 = 使用限制 + 對 Agent 要求 + API 介面 + 勾選系統操作說明。
           </p>
         </CardContent>
       </Card>
