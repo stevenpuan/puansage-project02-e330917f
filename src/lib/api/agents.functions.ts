@@ -46,7 +46,7 @@ export const createAgentAccount = createServerFn({ method: "POST" })
         description: data.description ?? null,
         model: data.model ?? "google/gemini-2.5-flash",
         system_prompt: data.system_prompt ?? null,
-        persona: data.persona ?? {},
+        persona: (data.persona ?? {}) as never,
         status: "active",
       })
       .select("id")
