@@ -264,6 +264,35 @@ function Page() {
     <div className="space-y-6">
       <PageHeader title="業務獎金" description="規則、明細與每人獎金彙總" />
 
+      {canEdit && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">分潤設定</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="commission-rate">員工分潤費率 (%)</Label>
+                <Input
+                  id="commission-rate"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={rateInput}
+                  onChange={(e) => setRateInput(e.target.value)}
+                  placeholder="例如 10"
+                />
+              </div>
+              <Button onClick={saveRate} className="sm:w-auto w-full">儲存</Button>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              合約狀態改為「成立」時，系統會自動依此費率產生分潤：給員工＝成交總額×費率，其餘進公司基金。此設定只影響之後新產生的分潤，不會回溯既有紀錄。
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       <Tabs defaultValue="summary">
         <TabsList>
           <TabsTrigger value="summary">每人獎金彙總</TabsTrigger>
