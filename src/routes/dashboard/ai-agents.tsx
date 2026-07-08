@@ -266,11 +266,12 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
   const [expires, setExpires] = useState(90);
   const [purpose, setPurpose] = useState("");
   const [email, setEmail] = useState("");
+  const [sendMail, setSendMail] = useState(true);
   const [checked, setChecked] = useState<Set<string>>(new Set(["me.read"]));
   const [busy, setBusy] = useState(false);
   const [issued, setIssued] = useState<string | null>(null);
 
-  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
+  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
   const toggle = (s: string) => setChecked((p) => { const n = new Set(p); n.has(s) ? n.delete(s) : n.add(s); return n; });
 
   const submit = async () => {
