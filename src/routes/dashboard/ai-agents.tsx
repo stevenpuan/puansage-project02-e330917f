@@ -150,6 +150,7 @@ function Page() {
                     <TableRow>
                       <TableCell><Button variant="ghost" size="icon" onClick={() => setExpanded((s) => ({ ...s, [a.id]: !s[a.id] }))}>{isOpen ? <ChevronDown /> : <ChevronRight />}</Button></TableCell>
                       <TableCell className="font-medium">{a.name}</TableCell>
+                      <TableCell className="text-muted-foreground text-xs">{a.email || "-"}</TableCell>
                       <TableCell className="text-muted-foreground">{a.code || "-"}</TableCell>
                       <TableCell><Badge variant={a.status === "active" ? "default" : "secondary"}>{a.status}</Badge></TableCell>
                       <TableCell>{a.roles?.name || "-"}</TableCell>
@@ -161,7 +162,7 @@ function Page() {
                     </TableRow>
                     {isOpen && (
                       <TableRow key={a.id + "-tokens"}>
-                        <TableCell colSpan={7} className="bg-muted/30">
+                        <TableCell colSpan={8} className="bg-muted/30">
                           <TokensPanel agentId={a.id} canManage={canEdit} />
                           <ChannelTestPanel />
                         </TableCell>
