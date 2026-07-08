@@ -138,11 +138,11 @@ function Page() {
         <CardContent>
           <Table>
             <TableHeader><TableRow>
-              <TableHead className="w-8"></TableHead><TableHead>名稱</TableHead><TableHead>代碼</TableHead>
+              <TableHead className="w-8"></TableHead><TableHead>名稱</TableHead><TableHead>Email</TableHead><TableHead>代碼</TableHead>
               <TableHead>狀態</TableHead><TableHead>角色</TableHead><TableHead>模型</TableHead><TableHead className="text-right">操作</TableHead>
             </TableRow></TableHeader>
             <TableBody>
-              {agents.length === 0 && <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-6">尚無資料</TableCell></TableRow>}
+              {agents.length === 0 && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-6">尚無資料</TableCell></TableRow>}
               {agents.map((a) => {
                 const isOpen = !!expanded[a.id];
                 return (
