@@ -30,6 +30,7 @@ interface ProfileRow {
   full_name: string | null;
   email: string | null;
   status: string;
+  kind?: string | null;
   created_at: string;
   last_login_at?: string | null;
   user_roles?: { roles: { id: string; code: string; name: string } | null }[];
