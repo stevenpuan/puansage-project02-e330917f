@@ -48,8 +48,10 @@ import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit
 import { Route as DashboardAiKnowledgeRouteImport } from './routes/dashboard/ai-knowledge'
 import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
 import { Route as DashboardAgentTokensRouteImport } from './routes/dashboard/agent-tokens'
+import { Route as DashboardAgentScopesRouteImport } from './routes/dashboard/agent-scopes'
 import { Route as DashboardAgentPromptRouteImport } from './routes/dashboard/agent-prompt'
 import { Route as DashboardAgentAuditRouteImport } from './routes/dashboard/agent-audit'
+import { Route as DashboardAgentActivityRouteImport } from './routes/dashboard/agent-activity'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
@@ -257,6 +259,11 @@ const DashboardAgentTokensRoute = DashboardAgentTokensRouteImport.update({
   path: '/agent-tokens',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAgentScopesRoute = DashboardAgentScopesRouteImport.update({
+  id: '/agent-scopes',
+  path: '/agent-scopes',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAgentPromptRoute = DashboardAgentPromptRouteImport.update({
   id: '/agent-prompt',
   path: '/agent-prompt',
@@ -265,6 +272,11 @@ const DashboardAgentPromptRoute = DashboardAgentPromptRouteImport.update({
 const DashboardAgentAuditRoute = DashboardAgentAuditRouteImport.update({
   id: '/agent-audit',
   path: '/agent-audit',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAgentActivityRoute = DashboardAgentActivityRouteImport.update({
+  id: '/agent-activity',
+  path: '/agent-activity',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardActivityLogsRoute = DashboardActivityLogsRouteImport.update({
@@ -315,8 +327,10 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
@@ -365,8 +379,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
@@ -417,8 +433,10 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
   '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
@@ -470,8 +488,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
     | '/dashboard/agent-prompt'
+    | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
     | '/dashboard/ai-knowledge'
@@ -520,8 +540,10 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
     | '/dashboard/agent-prompt'
+    | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
     | '/dashboard/ai-knowledge'
@@ -571,8 +593,10 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
     | '/dashboard/agent-prompt'
+    | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
     | '/dashboard/ai-knowledge'
@@ -899,6 +923,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAgentTokensRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/agent-scopes': {
+      id: '/dashboard/agent-scopes'
+      path: '/agent-scopes'
+      fullPath: '/dashboard/agent-scopes'
+      preLoaderRoute: typeof DashboardAgentScopesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/agent-prompt': {
       id: '/dashboard/agent-prompt'
       path: '/agent-prompt'
@@ -911,6 +942,13 @@ declare module '@tanstack/react-router' {
       path: '/agent-audit'
       fullPath: '/dashboard/agent-audit'
       preLoaderRoute: typeof DashboardAgentAuditRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/agent-activity': {
+      id: '/dashboard/agent-activity'
+      path: '/agent-activity'
+      fullPath: '/dashboard/agent-activity'
+      preLoaderRoute: typeof DashboardAgentActivityRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/activity-logs': {
@@ -974,8 +1012,10 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
+  DashboardAgentActivityRoute: typeof DashboardAgentActivityRoute
   DashboardAgentAuditRoute: typeof DashboardAgentAuditRoute
   DashboardAgentPromptRoute: typeof DashboardAgentPromptRoute
+  DashboardAgentScopesRoute: typeof DashboardAgentScopesRoute
   DashboardAgentTokensRoute: typeof DashboardAgentTokensRoute
   DashboardAiAgentsRoute: typeof DashboardAiAgentsRoute
   DashboardAiKnowledgeRoute: typeof DashboardAiKnowledgeRoute
@@ -1023,8 +1063,10 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
+  DashboardAgentActivityRoute: DashboardAgentActivityRoute,
   DashboardAgentAuditRoute: DashboardAgentAuditRoute,
   DashboardAgentPromptRoute: DashboardAgentPromptRoute,
+  DashboardAgentScopesRoute: DashboardAgentScopesRoute,
   DashboardAgentTokensRoute: DashboardAgentTokensRoute,
   DashboardAiAgentsRoute: DashboardAiAgentsRoute,
   DashboardAiKnowledgeRoute: DashboardAiKnowledgeRoute,
@@ -1082,3 +1124,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
