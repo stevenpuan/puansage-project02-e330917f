@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardWorkspaceRouteImport } from './routes/dashboard/workspace'
 import { Route as DashboardUsersRouteImport } from './routes/dashboard/users'
 import { Route as DashboardUserManualRouteImport } from './routes/dashboard/user-manual'
 import { Route as DashboardTasksRouteImport } from './routes/dashboard/tasks'
@@ -22,10 +23,6 @@ import { Route as DashboardServiceTicketsRouteImport } from './routes/dashboard/
 import { Route as DashboardRolePermissionsRouteImport } from './routes/dashboard/role-permissions'
 import { Route as DashboardReportsRouteImport } from './routes/dashboard/reports'
 import { Route as DashboardRenewalsRouteImport } from './routes/dashboard/renewals'
-import { Route as DashboardFundRouteImport } from './routes/dashboard/fund'
-import { Route as DashboardCalendarRouteImport } from './routes/dashboard/calendar'
-import { Route as DashboardWorkspaceRouteImport } from './routes/dashboard/workspace'
-import { Route as DashboardAgentPromptRouteImport } from './routes/dashboard/agent-prompt'
 import { Route as DashboardReceivablesRouteImport } from './routes/dashboard/receivables'
 import { Route as DashboardQuotesRouteImport } from './routes/dashboard/quotes'
 import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
@@ -34,18 +31,25 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard/payments'
 import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard/opportunities'
 import { Route as DashboardMenuManagementRouteImport } from './routes/dashboard/menu-management'
+import { Route as DashboardMembersRouteImport } from './routes/dashboard/members'
 import { Route as DashboardLookupsRouteImport } from './routes/dashboard/lookups'
 import { Route as DashboardIssueReportsRouteImport } from './routes/dashboard/issue-reports'
 import { Route as DashboardInvoicesRouteImport } from './routes/dashboard/invoices'
 import { Route as DashboardInvitationsRouteImport } from './routes/dashboard/invitations'
+import { Route as DashboardFundRouteImport } from './routes/dashboard/fund'
 import { Route as DashboardFeatureRequestsRouteImport } from './routes/dashboard/feature-requests'
 import { Route as DashboardErrorLogsRouteImport } from './routes/dashboard/error-logs'
 import { Route as DashboardDevTodosRouteImport } from './routes/dashboard/dev-todos'
 import { Route as DashboardDevHistoryRouteImport } from './routes/dashboard/dev-history'
 import { Route as DashboardContractsRouteImport } from './routes/dashboard/contracts'
 import { Route as DashboardCommissionsRouteImport } from './routes/dashboard/commissions'
+import { Route as DashboardCalendarRouteImport } from './routes/dashboard/calendar'
 import { Route as DashboardAuditLogsRouteImport } from './routes/dashboard/audit-logs'
+import { Route as DashboardAiKnowledgeRouteImport } from './routes/dashboard/ai-knowledge'
 import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-agents'
+import { Route as DashboardAgentTokensRouteImport } from './routes/dashboard/agent-tokens'
+import { Route as DashboardAgentPromptRouteImport } from './routes/dashboard/agent-prompt'
+import { Route as DashboardAgentAuditRouteImport } from './routes/dashboard/agent-audit'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
@@ -73,6 +77,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardWorkspaceRoute = DashboardWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardUsersRoute = DashboardUsersRouteImport.update({
@@ -121,26 +130,6 @@ const DashboardRenewalsRoute = DashboardRenewalsRouteImport.update({
   path: '/renewals',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardFundRoute = DashboardFundRouteImport.update({
-  id: '/fund',
-  path: '/fund',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardWorkspaceRoute = DashboardWorkspaceRouteImport.update({
-  id: '/workspace',
-  path: '/workspace',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAgentPromptRoute = DashboardAgentPromptRouteImport.update({
-  id: '/agent-prompt',
-  path: '/agent-prompt',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const DashboardReceivablesRoute = DashboardReceivablesRouteImport.update({
   id: '/receivables',
   path: '/receivables',
@@ -182,6 +171,11 @@ const DashboardMenuManagementRoute = DashboardMenuManagementRouteImport.update({
   path: '/menu-management',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardMembersRoute = DashboardMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardLookupsRoute = DashboardLookupsRouteImport.update({
   id: '/lookups',
   path: '/lookups',
@@ -200,6 +194,11 @@ const DashboardInvoicesRoute = DashboardInvoicesRouteImport.update({
 const DashboardInvitationsRoute = DashboardInvitationsRouteImport.update({
   id: '/invitations',
   path: '/invitations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardFundRoute = DashboardFundRouteImport.update({
+  id: '/fund',
+  path: '/fund',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardFeatureRequestsRoute =
@@ -233,14 +232,39 @@ const DashboardCommissionsRoute = DashboardCommissionsRouteImport.update({
   path: '/commissions',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAuditLogsRoute = DashboardAuditLogsRouteImport.update({
   id: '/audit-logs',
   path: '/audit-logs',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAiKnowledgeRoute = DashboardAiKnowledgeRouteImport.update({
+  id: '/ai-knowledge',
+  path: '/ai-knowledge',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAiAgentsRoute = DashboardAiAgentsRouteImport.update({
   id: '/ai-agents',
   path: '/ai-agents',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAgentTokensRoute = DashboardAgentTokensRouteImport.update({
+  id: '/agent-tokens',
+  path: '/agent-tokens',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAgentPromptRoute = DashboardAgentPromptRouteImport.update({
+  id: '/agent-prompt',
+  path: '/agent-prompt',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAgentAuditRoute = DashboardAgentAuditRouteImport.update({
+  id: '/agent-audit',
+  path: '/agent-audit',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardActivityLogsRoute = DashboardActivityLogsRouteImport.update({
@@ -291,18 +315,25 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
+  '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
   '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
+  '/dashboard/members': typeof DashboardMembersRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
@@ -312,10 +343,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
-  '/dashboard/fund': typeof DashboardFundRoute
-  '/dashboard/calendar': typeof DashboardCalendarRoute
-  '/dashboard/workspace': typeof DashboardWorkspaceRoute
-  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/reports': typeof DashboardReportsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -324,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard/user-manual': typeof DashboardUserManualRoute
   '/dashboard/users': typeof DashboardUsersRoute
+  '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/cases/$caseId': typeof DashboardCasesCaseIdRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
@@ -337,18 +365,25 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
+  '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
   '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
+  '/dashboard/members': typeof DashboardMembersRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
@@ -358,10 +393,6 @@ export interface FileRoutesByTo {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
-  '/dashboard/fund': typeof DashboardFundRoute
-  '/dashboard/calendar': typeof DashboardCalendarRoute
-  '/dashboard/workspace': typeof DashboardWorkspaceRoute
-  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/reports': typeof DashboardReportsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -370,6 +401,7 @@ export interface FileRoutesByTo {
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard/user-manual': typeof DashboardUserManualRoute
   '/dashboard/users': typeof DashboardUsersRoute
+  '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/cases/$caseId': typeof DashboardCasesCaseIdRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
@@ -385,18 +417,25 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
+  '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
+  '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
   '/dashboard/ai-agents': typeof DashboardAiAgentsRoute
+  '/dashboard/ai-knowledge': typeof DashboardAiKnowledgeRoute
   '/dashboard/audit-logs': typeof DashboardAuditLogsRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
   '/dashboard/commissions': typeof DashboardCommissionsRoute
   '/dashboard/contracts': typeof DashboardContractsRoute
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
+  '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
   '/dashboard/invoices': typeof DashboardInvoicesRoute
   '/dashboard/issue-reports': typeof DashboardIssueReportsRoute
   '/dashboard/lookups': typeof DashboardLookupsRoute
+  '/dashboard/members': typeof DashboardMembersRoute
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
@@ -406,10 +445,6 @@ export interface FileRoutesById {
   '/dashboard/quotes': typeof DashboardQuotesRoute
   '/dashboard/receivables': typeof DashboardReceivablesRoute
   '/dashboard/renewals': typeof DashboardRenewalsRoute
-  '/dashboard/fund': typeof DashboardFundRoute
-  '/dashboard/calendar': typeof DashboardCalendarRoute
-  '/dashboard/workspace': typeof DashboardWorkspaceRoute
-  '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/reports': typeof DashboardReportsRoute
   '/dashboard/role-permissions': typeof DashboardRolePermissionsRoute
   '/dashboard/service-tickets': typeof DashboardServiceTicketsRoute
@@ -418,6 +453,7 @@ export interface FileRoutesById {
   '/dashboard/tasks': typeof DashboardTasksRoute
   '/dashboard/user-manual': typeof DashboardUserManualRoute
   '/dashboard/users': typeof DashboardUsersRoute
+  '/dashboard/workspace': typeof DashboardWorkspaceRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/cases/$caseId': typeof DashboardCasesCaseIdRoute
   '/dashboard/clients/$clientId': typeof DashboardClientsClientIdRoute
@@ -434,18 +470,25 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-audit'
+    | '/dashboard/agent-prompt'
+    | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
+    | '/dashboard/ai-knowledge'
     | '/dashboard/audit-logs'
+    | '/dashboard/calendar'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
+    | '/dashboard/fund'
     | '/dashboard/invitations'
     | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
+    | '/dashboard/members'
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
@@ -455,10 +498,6 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
-    | '/dashboard/fund'
-    | '/dashboard/calendar'
-    | '/dashboard/workspace'
-    | '/dashboard/agent-prompt'
     | '/dashboard/reports'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -467,6 +506,7 @@ export interface FileRouteTypes {
     | '/dashboard/tasks'
     | '/dashboard/user-manual'
     | '/dashboard/users'
+    | '/dashboard/workspace'
     | '/dashboard/'
     | '/dashboard/cases/$caseId'
     | '/dashboard/clients/$clientId'
@@ -480,18 +520,25 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-audit'
+    | '/dashboard/agent-prompt'
+    | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
+    | '/dashboard/ai-knowledge'
     | '/dashboard/audit-logs'
+    | '/dashboard/calendar'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
+    | '/dashboard/fund'
     | '/dashboard/invitations'
     | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
+    | '/dashboard/members'
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
@@ -501,10 +548,6 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
-    | '/dashboard/fund'
-    | '/dashboard/calendar'
-    | '/dashboard/workspace'
-    | '/dashboard/agent-prompt'
     | '/dashboard/reports'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -513,6 +556,7 @@ export interface FileRouteTypes {
     | '/dashboard/tasks'
     | '/dashboard/user-manual'
     | '/dashboard/users'
+    | '/dashboard/workspace'
     | '/dashboard'
     | '/dashboard/cases/$caseId'
     | '/dashboard/clients/$clientId'
@@ -527,18 +571,25 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/dashboard/activity-logs'
+    | '/dashboard/agent-audit'
+    | '/dashboard/agent-prompt'
+    | '/dashboard/agent-tokens'
     | '/dashboard/ai-agents'
+    | '/dashboard/ai-knowledge'
     | '/dashboard/audit-logs'
+    | '/dashboard/calendar'
     | '/dashboard/commissions'
     | '/dashboard/contracts'
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
     | '/dashboard/feature-requests'
+    | '/dashboard/fund'
     | '/dashboard/invitations'
     | '/dashboard/invoices'
     | '/dashboard/issue-reports'
     | '/dashboard/lookups'
+    | '/dashboard/members'
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
@@ -548,10 +599,6 @@ export interface FileRouteTypes {
     | '/dashboard/quotes'
     | '/dashboard/receivables'
     | '/dashboard/renewals'
-    | '/dashboard/fund'
-    | '/dashboard/calendar'
-    | '/dashboard/workspace'
-    | '/dashboard/agent-prompt'
     | '/dashboard/reports'
     | '/dashboard/role-permissions'
     | '/dashboard/service-tickets'
@@ -560,6 +607,7 @@ export interface FileRouteTypes {
     | '/dashboard/tasks'
     | '/dashboard/user-manual'
     | '/dashboard/users'
+    | '/dashboard/workspace'
     | '/dashboard/'
     | '/dashboard/cases/$caseId'
     | '/dashboard/clients/$clientId'
@@ -604,6 +652,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/workspace': {
+      id: '/dashboard/workspace'
+      path: '/workspace'
+      fullPath: '/dashboard/workspace'
+      preLoaderRoute: typeof DashboardWorkspaceRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/users': {
@@ -669,34 +724,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRenewalsRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/fund': {
-      id: '/dashboard/fund'
-      path: '/fund'
-      fullPath: '/dashboard/fund'
-      preLoaderRoute: typeof DashboardFundRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/calendar': {
-      id: '/dashboard/calendar'
-      path: '/calendar'
-      fullPath: '/dashboard/calendar'
-      preLoaderRoute: typeof DashboardCalendarRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/workspace': {
-      id: '/dashboard/workspace'
-      path: '/workspace'
-      fullPath: '/dashboard/workspace'
-      preLoaderRoute: typeof DashboardWorkspaceRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/agent-prompt': {
-      id: '/dashboard/agent-prompt'
-      path: '/agent-prompt'
-      fullPath: '/dashboard/agent-prompt'
-      preLoaderRoute: typeof DashboardAgentPromptRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/receivables': {
       id: '/dashboard/receivables'
       path: '/receivables'
@@ -753,6 +780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMenuManagementRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/members': {
+      id: '/dashboard/members'
+      path: '/members'
+      fullPath: '/dashboard/members'
+      preLoaderRoute: typeof DashboardMembersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/lookups': {
       id: '/dashboard/lookups'
       path: '/lookups'
@@ -779,6 +813,13 @@ declare module '@tanstack/react-router' {
       path: '/invitations'
       fullPath: '/dashboard/invitations'
       preLoaderRoute: typeof DashboardInvitationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/fund': {
+      id: '/dashboard/fund'
+      path: '/fund'
+      fullPath: '/dashboard/fund'
+      preLoaderRoute: typeof DashboardFundRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/feature-requests': {
@@ -823,6 +864,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCommissionsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/calendar': {
+      id: '/dashboard/calendar'
+      path: '/calendar'
+      fullPath: '/dashboard/calendar'
+      preLoaderRoute: typeof DashboardCalendarRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/audit-logs': {
       id: '/dashboard/audit-logs'
       path: '/audit-logs'
@@ -830,11 +878,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAuditLogsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/ai-knowledge': {
+      id: '/dashboard/ai-knowledge'
+      path: '/ai-knowledge'
+      fullPath: '/dashboard/ai-knowledge'
+      preLoaderRoute: typeof DashboardAiKnowledgeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/ai-agents': {
       id: '/dashboard/ai-agents'
       path: '/ai-agents'
       fullPath: '/dashboard/ai-agents'
       preLoaderRoute: typeof DashboardAiAgentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/agent-tokens': {
+      id: '/dashboard/agent-tokens'
+      path: '/agent-tokens'
+      fullPath: '/dashboard/agent-tokens'
+      preLoaderRoute: typeof DashboardAgentTokensRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/agent-prompt': {
+      id: '/dashboard/agent-prompt'
+      path: '/agent-prompt'
+      fullPath: '/dashboard/agent-prompt'
+      preLoaderRoute: typeof DashboardAgentPromptRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/agent-audit': {
+      id: '/dashboard/agent-audit'
+      path: '/agent-audit'
+      fullPath: '/dashboard/agent-audit'
+      preLoaderRoute: typeof DashboardAgentAuditRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/activity-logs': {
@@ -898,18 +974,25 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
+  DashboardAgentAuditRoute: typeof DashboardAgentAuditRoute
+  DashboardAgentPromptRoute: typeof DashboardAgentPromptRoute
+  DashboardAgentTokensRoute: typeof DashboardAgentTokensRoute
   DashboardAiAgentsRoute: typeof DashboardAiAgentsRoute
+  DashboardAiKnowledgeRoute: typeof DashboardAiKnowledgeRoute
   DashboardAuditLogsRoute: typeof DashboardAuditLogsRoute
+  DashboardCalendarRoute: typeof DashboardCalendarRoute
   DashboardCommissionsRoute: typeof DashboardCommissionsRoute
   DashboardContractsRoute: typeof DashboardContractsRoute
   DashboardDevHistoryRoute: typeof DashboardDevHistoryRoute
   DashboardDevTodosRoute: typeof DashboardDevTodosRoute
   DashboardErrorLogsRoute: typeof DashboardErrorLogsRoute
   DashboardFeatureRequestsRoute: typeof DashboardFeatureRequestsRoute
+  DashboardFundRoute: typeof DashboardFundRoute
   DashboardInvitationsRoute: typeof DashboardInvitationsRoute
   DashboardInvoicesRoute: typeof DashboardInvoicesRoute
   DashboardIssueReportsRoute: typeof DashboardIssueReportsRoute
   DashboardLookupsRoute: typeof DashboardLookupsRoute
+  DashboardMembersRoute: typeof DashboardMembersRoute
   DashboardMenuManagementRoute: typeof DashboardMenuManagementRoute
   DashboardOpportunitiesRoute: typeof DashboardOpportunitiesRoute
   DashboardPaymentsRoute: typeof DashboardPaymentsRoute
@@ -919,10 +1002,6 @@ interface DashboardRouteChildren {
   DashboardQuotesRoute: typeof DashboardQuotesRoute
   DashboardReceivablesRoute: typeof DashboardReceivablesRoute
   DashboardRenewalsRoute: typeof DashboardRenewalsRoute
-  DashboardFundRoute: typeof DashboardFundRoute
-  DashboardCalendarRoute: typeof DashboardCalendarRoute
-  DashboardWorkspaceRoute: typeof DashboardWorkspaceRoute
-  DashboardAgentPromptRoute: typeof DashboardAgentPromptRoute
   DashboardReportsRoute: typeof DashboardReportsRoute
   DashboardRolePermissionsRoute: typeof DashboardRolePermissionsRoute
   DashboardServiceTicketsRoute: typeof DashboardServiceTicketsRoute
@@ -931,6 +1010,7 @@ interface DashboardRouteChildren {
   DashboardTasksRoute: typeof DashboardTasksRoute
   DashboardUserManualRoute: typeof DashboardUserManualRoute
   DashboardUsersRoute: typeof DashboardUsersRoute
+  DashboardWorkspaceRoute: typeof DashboardWorkspaceRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardCasesCaseIdRoute: typeof DashboardCasesCaseIdRoute
   DashboardClientsClientIdRoute: typeof DashboardClientsClientIdRoute
@@ -943,18 +1023,25 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
+  DashboardAgentAuditRoute: DashboardAgentAuditRoute,
+  DashboardAgentPromptRoute: DashboardAgentPromptRoute,
+  DashboardAgentTokensRoute: DashboardAgentTokensRoute,
   DashboardAiAgentsRoute: DashboardAiAgentsRoute,
+  DashboardAiKnowledgeRoute: DashboardAiKnowledgeRoute,
   DashboardAuditLogsRoute: DashboardAuditLogsRoute,
+  DashboardCalendarRoute: DashboardCalendarRoute,
   DashboardCommissionsRoute: DashboardCommissionsRoute,
   DashboardContractsRoute: DashboardContractsRoute,
   DashboardDevHistoryRoute: DashboardDevHistoryRoute,
   DashboardDevTodosRoute: DashboardDevTodosRoute,
   DashboardErrorLogsRoute: DashboardErrorLogsRoute,
   DashboardFeatureRequestsRoute: DashboardFeatureRequestsRoute,
+  DashboardFundRoute: DashboardFundRoute,
   DashboardInvitationsRoute: DashboardInvitationsRoute,
   DashboardInvoicesRoute: DashboardInvoicesRoute,
   DashboardIssueReportsRoute: DashboardIssueReportsRoute,
   DashboardLookupsRoute: DashboardLookupsRoute,
+  DashboardMembersRoute: DashboardMembersRoute,
   DashboardMenuManagementRoute: DashboardMenuManagementRoute,
   DashboardOpportunitiesRoute: DashboardOpportunitiesRoute,
   DashboardPaymentsRoute: DashboardPaymentsRoute,
@@ -964,10 +1051,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardQuotesRoute: DashboardQuotesRoute,
   DashboardReceivablesRoute: DashboardReceivablesRoute,
   DashboardRenewalsRoute: DashboardRenewalsRoute,
-  DashboardFundRoute: DashboardFundRoute,
-  DashboardCalendarRoute: DashboardCalendarRoute,
-  DashboardWorkspaceRoute: DashboardWorkspaceRoute,
-  DashboardAgentPromptRoute: DashboardAgentPromptRoute,
   DashboardReportsRoute: DashboardReportsRoute,
   DashboardRolePermissionsRoute: DashboardRolePermissionsRoute,
   DashboardServiceTicketsRoute: DashboardServiceTicketsRoute,
@@ -976,6 +1059,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardTasksRoute: DashboardTasksRoute,
   DashboardUserManualRoute: DashboardUserManualRoute,
   DashboardUsersRoute: DashboardUsersRoute,
+  DashboardWorkspaceRoute: DashboardWorkspaceRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardCasesCaseIdRoute: DashboardCasesCaseIdRoute,
   DashboardClientsClientIdRoute: DashboardClientsClientIdRoute,
@@ -998,3 +1082,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
