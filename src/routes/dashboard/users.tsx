@@ -173,7 +173,12 @@ function UsersPage() {
             )}
             {list.map((r) => (
               <TableRow key={r.id}>
-                <TableCell className="font-medium">{r.full_name ?? "—"}</TableCell>
+                <TableCell className="font-medium">
+                  <span className="inline-flex items-center gap-1.5">
+                    {r.full_name ?? "—"}
+                    {r.kind === "agent" && <Badge variant="secondary" className="text-[10px]">Agent</Badge>}
+                  </span>
+                </TableCell>
                 <TableCell>{r.email}</TableCell>
                 <TableCell>{(r.user_roles ?? []).map((x) => x.roles?.name).filter(Boolean).join("、") || "—"}</TableCell>
                 <TableCell>
