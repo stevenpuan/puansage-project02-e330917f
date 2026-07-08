@@ -186,6 +186,7 @@ export type Database = {
           status: string
           system_prompt: string | null
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -207,6 +208,7 @@ export type Database = {
           status?: string
           system_prompt?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -228,6 +230,7 @@ export type Database = {
           status?: string
           system_prompt?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -2084,6 +2087,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          kind: string
           last_login_at: string | null
           status: string
           updated_at: string
@@ -2094,6 +2098,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          kind?: string
           last_login_at?: string | null
           status?: string
           updated_at?: string
@@ -2104,6 +2109,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          kind?: string
           last_login_at?: string | null
           status?: string
           updated_at?: string
@@ -3570,6 +3576,10 @@ export type Database = {
       gen_renewal_contract: { Args: { p_contract: string }; Returns: string }
       get_commission_rate: { Args: never; Returns: number }
       is_admin: { Args: never; Returns: boolean }
+      link_agent_profile: {
+        Args: { p_agent: string; p_role: string; p_user: string }
+        Returns: undefined
+      }
       redeem_invitation: { Args: { p_code: string }; Returns: string }
       set_commission_rate: { Args: { p_rate: number }; Returns: number }
       user_can: {
