@@ -81,6 +81,32 @@ function Page() {
   const canEdit = can("commission", "edit");
   const canDelete = can("commission", "delete");
 
+  const { data: currentRate } = useQuery({
+    queryKey: ["commission_rate"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_commission_rate");
+      if (error) throw error;
+      return (data ?? 0) as number;
+    },
+    enabled: canEdit,
+  });
+  const [rateInput, setRateInput] = useState("");
+  useEffect(() => {
+    if (currentRate != null) setRateInput(String(Number(currentRate) * 100));
+  }, [currentRate]);
+
+  const saveRate = async () => {
+    const val = Number(rateInput);
+    if (Number.isNaN(val) || val < 0 || val > 100) {
+      toast.error("請輸入 0～100 的數字");
+      return;
+    }
+    const { error } = await supabase.rpc("set_commission_rate", { p_rate: val / 100 });
+    if (error) { toast.error(error.message); return; }
+    toast.success("分潤費率已更新為 " + val + "%");
+    qc.invalidateQueries({ queryKey: ["commission_rate"] });
+  };
+
   const { data: roleOpts = [] } = useLookups("deal_role");
   const { data: statusOpts = [] } = useLookups("commission_payout_status");
   const { data: baseOpts = [] } = useLookups("commission_base");
