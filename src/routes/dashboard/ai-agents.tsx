@@ -22,7 +22,7 @@ export const Route = createFileRoute("/dashboard/ai-agents")({ component: Page }
 
 const AGENT_ENDPOINT = "https://oxtozbvbyjwokwisrghm.supabase.co/functions/v1/agent-api";
 const EXPIRY_OPTIONS = [7, 30, 90, 180, 365];
-const SCOPE_CATEGORIES = ["讀取", "寫入", "高權"] as const;
+const SCOPE_CATEGORIES = ["讀取", "新增", "修改"] as const;
 
 interface AgentRow {
   id: string; code: string | null; name: string; email: string | null; description: string | null; status: string;
@@ -475,8 +475,8 @@ function TokensPanel({ agentId, canManage }: { agentId: string; canManage: boole
   );
 }
 
-const TEST_RESOURCES = ["cases", "opportunities", "contracts", "clients", "client_contacts", "payments", "invoices", "ledger", "commission", "service_tickets"] as const;
-const WRITE_RESOURCES = ["cases", "opportunities", "service_tickets"] as const;
+const TEST_RESOURCES = ["project", "task", "opportunity", "service_ticket", "contract", "client", "quote", "payment", "invoice", "commission"] as const;
+const WRITE_RESOURCES = ["project", "task", "opportunity", "service_ticket"] as const;
 
 function ChannelTestPanel() {
   const [token, setToken] = useState("");
