@@ -40,8 +40,8 @@ function personaToForm(p: unknown): PersonaForm {
   const s = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
   return { tone: s(o.tone), role: s(o.role), dos: s(o.dos), donts: s(o.donts), examples: s(o.examples) };
 }
-interface AgentForm { code: string; name: string; description: string; status: string; role_id: string; model: string; system_prompt: string; persona: PersonaForm; }
-const EMPTY_FORM: AgentForm = { code: "", name: "", description: "", status: "active", role_id: "", model: "google/gemini-2.5-flash", system_prompt: "", persona: { ...EMPTY_PERSONA } };
+interface AgentForm { code: string; name: string; email: string; description: string; status: string; role_id: string; model: string; system_prompt: string; persona: PersonaForm; }
+const EMPTY_FORM: AgentForm = { code: "", name: "", email: "", description: "", status: "active", role_id: "", model: "google/gemini-2.5-flash", system_prompt: "", persona: { ...EMPTY_PERSONA } };
 
 function useScopeCatalog() {
   return useQuery({
