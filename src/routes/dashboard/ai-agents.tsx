@@ -23,7 +23,7 @@ const EXPIRY_OPTIONS = [7, 30, 90, 180, 365];
 const SCOPE_CATEGORIES = ["讀取", "寫入", "高權"] as const;
 
 interface AgentRow {
-  id: string; code: string | null; name: string; description: string | null; status: string;
+  id: string; code: string | null; name: string; email: string | null; description: string | null; status: string;
   model: string | null; role_id: string | null; system_prompt: string | null;
   persona: Record<string, unknown> | null; roles?: { name: string | null } | null;
 }
