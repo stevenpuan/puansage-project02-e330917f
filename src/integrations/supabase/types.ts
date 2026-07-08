@@ -52,6 +52,69 @@ export type Database = {
           },
         ]
       }
+      agent_scopes: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          reserved: boolean
+          scope: string
+          sensitivity: string
+          sort_order: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          reserved?: boolean
+          scope: string
+          sensitivity?: string
+          sort_order?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          reserved?: boolean
+          scope?: string
+          sensitivity?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      ai_agent_knowledge: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          knowledge_id: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          knowledge_id: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          knowledge_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_knowledge_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_agent_knowledge_knowledge_id_fkey"
+            columns: ["knowledge_id"]
+            isOneToOne: false
+            referencedRelation: "ai_knowledge"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agent_tokens: {
         Row: {
           agent_id: string | null
@@ -106,14 +169,19 @@ export type Database = {
         Row: {
           avatar_url: string | null
           code: string | null
+          config: Json | null
           created_at: string | null
           created_by: string | null
           description: string | null
+          endpoint_url: string | null
           id: string
+          kind: string
           model: string | null
           name: string
           persona: Json | null
+          provider: string
           role_id: string | null
+          secret_ref: string | null
           status: string
           system_prompt: string | null
           updated_at: string | null
@@ -121,14 +189,19 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           code?: string | null
+          config?: Json | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
+          endpoint_url?: string | null
           id?: string
+          kind?: string
           model?: string | null
           name: string
           persona?: Json | null
+          provider?: string
           role_id?: string | null
+          secret_ref?: string | null
           status?: string
           system_prompt?: string | null
           updated_at?: string | null
@@ -136,14 +209,19 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           code?: string | null
+          config?: Json | null
           created_at?: string | null
           created_by?: string | null
           description?: string | null
+          endpoint_url?: string | null
           id?: string
+          kind?: string
           model?: string | null
           name?: string
           persona?: Json | null
+          provider?: string
           role_id?: string | null
+          secret_ref?: string | null
           status?: string
           system_prompt?: string | null
           updated_at?: string | null
@@ -157,6 +235,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_knowledge: {
+        Row: {
+          category: string | null
+          code: string | null
+          content: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          source_type: string | null
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          code?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          source_type?: string | null
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          code?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          source_type?: string | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       attachments: {
         Row: {
@@ -248,6 +368,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      calendar_events: {
+        Row: {
+          all_day: boolean
+          color: string | null
+          created_at: string
+          description: string | null
+          end_at: string | null
+          id: string
+          location: string | null
+          owner_id: string
+          start_at: string
+          title: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          all_day?: boolean
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          owner_id?: string
+          start_at: string
+          title: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          all_day?: boolean
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          owner_id?: string
+          start_at?: string
+          title?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
       }
       case_tasks: {
         Row: {
@@ -739,6 +904,13 @@ export type Database = {
             foreignKeyName: "collection_logs_payment_id_fkey"
             columns: ["payment_id"]
             isOneToOne: false
+            referencedRelation: "v_payment_alerts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_logs_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
             referencedRelation: "v_payment_due"
             referencedColumns: ["id"]
           },
@@ -748,6 +920,7 @@ export type Database = {
         Row: {
           base_amount: number | null
           commission_amount: number | null
+          company_amount: number
           contract_id: string | null
           created_at: string | null
           created_by: string | null
@@ -768,6 +941,7 @@ export type Database = {
         Insert: {
           base_amount?: number | null
           commission_amount?: number | null
+          company_amount?: number
           contract_id?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -788,6 +962,7 @@ export type Database = {
         Update: {
           base_amount?: number | null
           commission_amount?: number | null
+          company_amount?: number
           contract_id?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -828,10 +1003,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "commission_entries_contract_id_fkey"
-            columns: ["contract_id"]
+            foreignKeyName: "commission_entries_payee_id_fkey"
+            columns: ["payee_id"]
             isOneToOne: false
-            referencedRelation: "v_payment_alerts"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -839,6 +1014,13 @@ export type Database = {
             columns: ["payment_id"]
             isOneToOne: false
             referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_entries_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "v_payment_alerts"
             referencedColumns: ["id"]
           },
           {
@@ -943,6 +1125,7 @@ export type Database = {
           note: string | null
           payment_status: string
           project_id: string | null
+          quote_id: string | null
           signed_date: string | null
           sla_hours: number | null
           start_date: string | null
@@ -973,6 +1156,7 @@ export type Database = {
           note?: string | null
           payment_status?: string
           project_id?: string | null
+          quote_id?: string | null
           signed_date?: string | null
           sla_hours?: number | null
           start_date?: string | null
@@ -1003,6 +1187,7 @@ export type Database = {
           note?: string | null
           payment_status?: string
           project_id?: string | null
+          quote_id?: string | null
           signed_date?: string | null
           sla_hours?: number | null
           start_date?: string | null
@@ -1074,6 +1259,20 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "v_quote_summary"
             referencedColumns: ["id"]
           },
           {
@@ -1242,6 +1441,39 @@ export type Database = {
           },
         ]
       }
+      fund_ledger: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          direction: string
+          entry_date: string
+          id: string
+          note: string | null
+          reason: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          entry_date?: string
+          id?: string
+          note?: string | null
+          reason?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          entry_date?: string
+          id?: string
+          note?: string | null
+          reason?: string | null
+        }
+        Relationships: []
+      }
       invitations: {
         Row: {
           code: string
@@ -1371,17 +1603,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "invoices_contract_id_fkey"
-            columns: ["contract_id"]
+            foreignKeyName: "invoices_payment_id_fkey"
+            columns: ["payment_id"]
             isOneToOne: false
-            referencedRelation: "v_payment_alerts"
+            referencedRelation: "payments"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "invoices_payment_id_fkey"
             columns: ["payment_id"]
             isOneToOne: false
-            referencedRelation: "payments"
+            referencedRelation: "v_payment_alerts"
             referencedColumns: ["id"]
           },
           {
@@ -1792,13 +2024,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "payments_contract_id_fkey"
-            columns: ["contract_id"]
-            isOneToOne: false
-            referencedRelation: "v_payment_alerts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "payments_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -1806,6 +2031,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      personal_tasks: {
+        Row: {
+          created_at: string
+          description: string | null
+          done_at: string | null
+          due_date: string | null
+          id: string
+          owner_id: string
+          priority: string
+          status: string
+          title: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          done_at?: string | null
+          due_date?: string | null
+          id?: string
+          owner_id?: string
+          priority?: string
+          status?: string
+          title: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          done_at?: string | null
+          due_date?: string | null
+          id?: string
+          owner_id?: string
+          priority?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -2256,13 +2523,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "service_tickets_contract_id_fkey"
-            columns: ["contract_id"]
-            isOneToOne: false
-            referencedRelation: "v_payment_alerts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "service_tickets_system_id_fkey"
             columns: ["system_id"]
             isOneToOne: false
@@ -2469,6 +2729,22 @@ export type Database = {
       }
     }
     Views: {
+      v_calendar: {
+        Row: {
+          all_day: boolean | null
+          color: string | null
+          editable: boolean | null
+          end_at: string | null
+          id: string | null
+          kind: string | null
+          owner_id: string | null
+          ref_id: string | null
+          start_at: string | null
+          title: string | null
+          visibility: string | null
+        }
+        Relationships: []
+      }
       v_case_summary: {
         Row: {
           amount: number | null
@@ -2479,6 +2755,7 @@ export type Database = {
           member_count: number | null
           milestone_done: number | null
           milestone_total: number | null
+          open_task_count: number | null
           open_tasks: number | null
           overdue: boolean | null
           owner_name: string | null
@@ -2560,7 +2837,15 @@ export type Database = {
           realized_amount: number | null
           total_amount: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "commission_entries_payee_id_fkey"
+            columns: ["payee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_contract_expiry_alerts: {
         Row: {
@@ -2740,6 +3025,47 @@ export type Database = {
           },
         ]
       }
+      v_fund_by_person: {
+        Row: {
+          email: string | null
+          entries: number | null
+          full_name: string | null
+          payee_id: string | null
+          total_company: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_entries_payee_id_fkey"
+            columns: ["payee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_fund_ledger: {
+        Row: {
+          amount: number | null
+          case_code: string | null
+          case_title: string | null
+          direction: string | null
+          editable: boolean | null
+          entry_date: string | null
+          id: string | null
+          note: string | null
+          payee_id: string | null
+          reason: string | null
+        }
+        Relationships: []
+      }
+      v_fund_summary: {
+        Row: {
+          balance: number | null
+          total_in: number | null
+          total_out: number | null
+        }
+        Relationships: []
+      }
       v_maintenance_alerts: {
         Row: {
           client_name: string | null
@@ -2764,6 +3090,7 @@ export type Database = {
           assignee_id: string | null
           assignee_name: string | null
           case_code: string | null
+          case_id: string | null
           case_title: string | null
           client_name: string | null
           days_left: number | null
@@ -2781,10 +3108,39 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_case_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_project_closeout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_tasks_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
         ]
       }
       v_payment_alerts: {
         Row: {
+          amount: number | null
           billing_type: string | null
           days_left: number | null
           id: string | null
@@ -2792,6 +3148,7 @@ export type Database = {
           payment_status: string | null
           system_code: string | null
           system_name: string | null
+          title: string | null
         }
         Relationships: []
       }
@@ -3105,13 +3462,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "service_tickets_contract_id_fkey"
-            columns: ["contract_id"]
-            isOneToOne: false
-            referencedRelation: "v_payment_alerts"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "service_tickets_system_id_fkey"
             columns: ["system_id"]
             isOneToOne: false
@@ -3175,19 +3525,50 @@ export type Database = {
       }
     }
     Functions: {
+      agent_ops_manual: { Args: { p_agent: string }; Returns: string }
+      agent_query: {
+        Args: {
+          p_agent: string
+          p_limit?: number
+          p_offset?: number
+          p_resource: string
+          p_scopes?: string[]
+        }
+        Returns: Json
+      }
+      agent_write: {
+        Args: {
+          p_agent: string
+          p_data: Json
+          p_id: string
+          p_op: string
+          p_resource: string
+          p_scopes?: string[]
+        }
+        Returns: Json
+      }
       convert_opportunity: { Args: { p_opp: string }; Returns: string }
+      convert_quote_to_contract: { Args: { p_quote: string }; Returns: string }
       create_agent_token: {
-        Args: { p_agent: string; p_expires?: string; p_name?: string }
+        Args: {
+          p_agent: string
+          p_expires?: string
+          p_name?: string
+          p_scopes?: string[]
+        }
         Returns: string
       }
       daily_maintenance: { Args: never; Returns: Json }
+      export_agent_pack: { Args: { p_agent: string }; Returns: string }
       gen_maintenance_payments: {
         Args: { p_contract: string }
         Returns: number
       }
       gen_renewal_contract: { Args: { p_contract: string }; Returns: string }
+      get_commission_rate: { Args: never; Returns: number }
       is_admin: { Args: never; Returns: boolean }
       redeem_invitation: { Args: { p_code: string }; Returns: string }
+      set_commission_rate: { Args: { p_rate: number }; Returns: number }
       user_can: {
         Args: { p_action: string; p_module: string }
         Returns: boolean

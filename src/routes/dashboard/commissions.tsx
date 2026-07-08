@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -80,6 +80,32 @@ function Page() {
   const canCreate = can("commission", "create");
   const canEdit = can("commission", "edit");
   const canDelete = can("commission", "delete");
+
+  const { data: currentRate } = useQuery({
+    queryKey: ["commission_rate"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_commission_rate");
+      if (error) throw error;
+      return (data ?? 0) as number;
+    },
+    enabled: canEdit,
+  });
+  const [rateInput, setRateInput] = useState("");
+  useEffect(() => {
+    if (currentRate != null) setRateInput(String(Number(currentRate) * 100));
+  }, [currentRate]);
+
+  const saveRate = async () => {
+    const val = Number(rateInput);
+    if (Number.isNaN(val) || val < 0 || val > 100) {
+      toast.error("請輸入 0～100 的數字");
+      return;
+    }
+    const { error } = await supabase.rpc("set_commission_rate", { p_rate: val / 100 });
+    if (error) { toast.error(error.message); return; }
+    toast.success("分潤費率已更新為 " + val + "%");
+    qc.invalidateQueries({ queryKey: ["commission_rate"] });
+  };
 
   const { data: roleOpts = [] } = useLookups("deal_role");
   const { data: statusOpts = [] } = useLookups("commission_payout_status");
@@ -237,6 +263,35 @@ function Page() {
   return (
     <div className="space-y-6">
       <PageHeader title="業務獎金" description="規則、明細與每人獎金彙總" />
+
+      {canEdit && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">分潤設定</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+              <div className="flex-1 space-y-2">
+                <Label htmlFor="commission-rate">員工分潤費率 (%)</Label>
+                <Input
+                  id="commission-rate"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={rateInput}
+                  onChange={(e) => setRateInput(e.target.value)}
+                  placeholder="例如 10"
+                />
+              </div>
+              <Button onClick={saveRate} className="sm:w-auto w-full">儲存</Button>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              合約狀態改為「成立」時，系統會自動依此費率產生分潤：給員工＝成交總額×費率，其餘進公司基金。此設定只影響之後新產生的分潤，不會回溯既有紀錄。
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs defaultValue="summary">
         <TabsList>
