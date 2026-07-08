@@ -188,6 +188,7 @@ function Page() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1"><Label>Code</Label><Input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="AGENT-001" /></div>
               <div className="space-y-1"><Label>名稱 *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+              <div className="space-y-1 col-span-2"><Label>Email *（Agent 帳號識別）</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="agent@example.com" /></div>
               <div className="space-y-1"><Label>狀態</Label>
                 <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
