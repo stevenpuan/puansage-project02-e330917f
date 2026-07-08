@@ -23,7 +23,7 @@ const EXPIRY_OPTIONS = [7, 30, 90, 180, 365];
 const SCOPE_CATEGORIES = ["讀取", "寫入", "高權"] as const;
 
 interface AgentRow {
-  id: string; code: string | null; name: string; description: string | null; status: string;
+  id: string; code: string | null; name: string; email: string | null; description: string | null; status: string;
   model: string | null; role_id: string | null; system_prompt: string | null;
   persona: Record<string, unknown> | null; roles?: { name: string | null } | null;
 }
@@ -40,8 +40,8 @@ function personaToForm(p: unknown): PersonaForm {
   const s = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
   return { tone: s(o.tone), role: s(o.role), dos: s(o.dos), donts: s(o.donts), examples: s(o.examples) };
 }
-interface AgentForm { code: string; name: string; description: string; status: string; role_id: string; model: string; system_prompt: string; persona: PersonaForm; }
-const EMPTY_FORM: AgentForm = { code: "", name: "", description: "", status: "active", role_id: "", model: "google/gemini-2.5-flash", system_prompt: "", persona: { ...EMPTY_PERSONA } };
+interface AgentForm { code: string; name: string; email: string; description: string; status: string; role_id: string; model: string; system_prompt: string; persona: PersonaForm; }
+const EMPTY_FORM: AgentForm = { code: "", name: "", email: "", description: "", status: "active", role_id: "", model: "google/gemini-2.5-flash", system_prompt: "", persona: { ...EMPTY_PERSONA } };
 
 function useScopeCatalog() {
   return useQuery({
@@ -86,14 +86,16 @@ function Page() {
 
   const openEdit = (a: AgentRow) => {
     setEditing(a);
-    setForm({ code: a.code ?? "", name: a.name, description: a.description ?? "", status: a.status ?? "active",
+    setForm({ code: a.code ?? "", name: a.name, email: a.email ?? "", description: a.description ?? "", status: a.status ?? "active",
       role_id: a.role_id ?? "", model: a.model ?? "", system_prompt: a.system_prompt ?? "", persona: personaToForm(a.persona) });
     setEditDialog(true);
   };
   const saveEdit = async () => {
     if (!form.name.trim()) { toast.error("請輸入名稱"); return; }
+    if (!form.email.trim()) { toast.error("請輸入 Email"); return; }
     const payload = {
-      code: form.code.trim() || null, name: form.name.trim(), description: form.description || null,
+      code: form.code.trim() || null, name: form.name.trim(), email: form.email.trim().toLowerCase(),
+      description: form.description || null,
       status: form.status, role_id: form.role_id || null, model: form.model || null,
       system_prompt: form.system_prompt || null,
       persona: { ...form.persona } as unknown as import("@/integrations/supabase/types").Json,
@@ -136,11 +138,11 @@ function Page() {
         <CardContent>
           <Table>
             <TableHeader><TableRow>
-              <TableHead className="w-8"></TableHead><TableHead>名稱</TableHead><TableHead>代碼</TableHead>
+              <TableHead className="w-8"></TableHead><TableHead>名稱</TableHead><TableHead>Email</TableHead><TableHead>代碼</TableHead>
               <TableHead>狀態</TableHead><TableHead>角色</TableHead><TableHead>模型</TableHead><TableHead className="text-right">操作</TableHead>
             </TableRow></TableHeader>
             <TableBody>
-              {agents.length === 0 && <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-6">尚無資料</TableCell></TableRow>}
+              {agents.length === 0 && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-6">尚無資料</TableCell></TableRow>}
               {agents.map((a) => {
                 const isOpen = !!expanded[a.id];
                 return (
@@ -148,6 +150,7 @@ function Page() {
                     <TableRow>
                       <TableCell><Button variant="ghost" size="icon" onClick={() => setExpanded((s) => ({ ...s, [a.id]: !s[a.id] }))}>{isOpen ? <ChevronDown /> : <ChevronRight />}</Button></TableCell>
                       <TableCell className="font-medium">{a.name}</TableCell>
+                      <TableCell className="text-muted-foreground text-xs">{a.email || "-"}</TableCell>
                       <TableCell className="text-muted-foreground">{a.code || "-"}</TableCell>
                       <TableCell><Badge variant={a.status === "active" ? "default" : "secondary"}>{a.status}</Badge></TableCell>
                       <TableCell>{a.roles?.name || "-"}</TableCell>
@@ -159,7 +162,7 @@ function Page() {
                     </TableRow>
                     {isOpen && (
                       <TableRow key={a.id + "-tokens"}>
-                        <TableCell colSpan={7} className="bg-muted/30">
+                        <TableCell colSpan={8} className="bg-muted/30">
                           <TokensPanel agentId={a.id} canManage={canEdit} />
                           <ChannelTestPanel />
                         </TableCell>
@@ -185,6 +188,7 @@ function Page() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1"><Label>Code</Label><Input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="AGENT-001" /></div>
               <div className="space-y-1"><Label>名稱 *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+              <div className="space-y-1 col-span-2"><Label>Email *（Agent 帳號識別）</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="agent@example.com" /></div>
               <div className="space-y-1"><Label>狀態</Label>
                 <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
@@ -262,19 +266,22 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
   const [expires, setExpires] = useState(90);
   const [purpose, setPurpose] = useState("");
   const [email, setEmail] = useState("");
+  const [sendMail, setSendMail] = useState(true);
   const [checked, setChecked] = useState<Set<string>>(new Set(["me.read"]));
   const [busy, setBusy] = useState(false);
   const [issued, setIssued] = useState<string | null>(null);
 
-  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
+  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
   const toggle = (s: string) => setChecked((p) => { const n = new Set(p); n.has(s) ? n.delete(s) : n.add(s); return n; });
 
   const submit = async () => {
     if (!name.trim()) { toast.error("請輸入 Agent 名稱"); return; }
+    if (!email.trim()) { toast.error("請輸入 Agent Email"); return; }
     setBusy(true);
     try {
+      const emailLc = email.trim().toLowerCase();
       const { data: agent, error: aErr } = await supabase.from("ai_agents")
-        .insert({ name: name.trim(), model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
+        .insert({ name: name.trim(), email: emailLc, model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
         .select("id").single();
       if (aErr) { toast.error(`建立 Agent 失敗：${aErr.message}`); return; }
       const expiresAt = new Date(Date.now() + expires * 86400000).toISOString();
@@ -283,13 +290,13 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
       });
       if (tErr) { toast.error(`發行 Token 失敗：${tErr.message}`); return; }
       setIssued(String(token));
-      if (email.trim()) {
+      if (sendMail) {
         const { error: eErr } = await supabase.functions.invoke("send-email", {
-          body: { to: email.trim(), subject: `您的 AI Agent Token — ${name.trim()}`,
-            html: `<p>Agent：<b>${name.trim()}</b></p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
+          body: { to: emailLc, subject: `您的 AI Agent Token — ${name.trim()}`,
+            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
         });
         if (eErr) toast.error(`Token 已建立，但寄信失敗：${eErr.message}`);
-        else toast.success(`已寄送到 ${email.trim()}`);
+        else toast.success(`已寄送到 ${emailLc}`);
       }
       onDone();
     } finally { setBusy(false); }
@@ -331,8 +338,12 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
             </div>
             <ScopePicker catalog={catalog} checked={checked} toggle={toggle} />
             <div className="space-y-1">
-              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> 寄送 Token 到 Email（選填）</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="留空則不寄，發行後畫面顯示一次" />
+              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（帳號識別，與 Token 一併驗證）</span></Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
+              <label className="flex items-center gap-2 text-xs text-muted-foreground pt-1 cursor-pointer">
+                <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
+                建立後寄送 Token 到此 Email
+              </label>
             </div>
             <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ 建立成功後 Token 只會顯示一次，請立即複製或用 Email 寄送。</div>
             <DialogFooter>
