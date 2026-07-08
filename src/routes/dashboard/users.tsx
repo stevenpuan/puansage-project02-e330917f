@@ -30,6 +30,7 @@ interface ProfileRow {
   full_name: string | null;
   email: string | null;
   status: string;
+  kind?: string | null;
   created_at: string;
   last_login_at?: string | null;
   user_roles?: { roles: { id: string; code: string; name: string } | null }[];
@@ -172,7 +173,12 @@ function UsersPage() {
             )}
             {list.map((r) => (
               <TableRow key={r.id}>
-                <TableCell className="font-medium">{r.full_name ?? "—"}</TableCell>
+                <TableCell className="font-medium">
+                  <span className="inline-flex items-center gap-1.5">
+                    {r.full_name ?? "—"}
+                    {r.kind === "agent" && <Badge variant="secondary" className="text-[10px]">Agent</Badge>}
+                  </span>
+                </TableCell>
                 <TableCell>{r.email}</TableCell>
                 <TableCell>{(r.user_roles ?? []).map((x) => x.roles?.name).filter(Boolean).join("、") || "—"}</TableCell>
                 <TableCell>

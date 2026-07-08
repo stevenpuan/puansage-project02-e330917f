@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { Fragment, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { createAgentAccount, deleteAgentAccount } from "@/lib/api/agents.functions";
 import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -107,11 +109,13 @@ function Page() {
     toast.success("已更新"); setEditDialog(false);
     qc.invalidateQueries({ queryKey: ["ai_agents"] });
   };
+  const delAgent = useServerFn(deleteAgentAccount);
   const del = async (a: AgentRow) => {
-    if (!confirm(`確定刪除 Agent「${a.name}」？`)) return;
-    const { error } = await supabase.from("ai_agents").delete().eq("id", a.id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("已刪除"); qc.invalidateQueries({ queryKey: ["ai_agents"] });
+    if (!confirm(`確定刪除 Agent「${a.name}」？此動作會同時移除對應的登入帳號。`)) return;
+    try {
+      await delAgent({ data: { agent_id: a.id } });
+      toast.success("已刪除"); qc.invalidateQueries({ queryKey: ["ai_agents"] });
+    } catch (e) { toast.error(e instanceof Error ? e.message : String(e)); }
   };
   const copyEndpoint = () => { navigator.clipboard.writeText(AGENT_ENDPOINT); toast.success("已複製端點"); };
 
@@ -260,42 +264,53 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
   open: boolean; onOpenChange: (v: boolean) => void; roles: { id: string; name: string }[]; onDone: () => void;
 }) {
   const { data: catalog = [] } = useScopeCatalog();
+  const createAgent = useServerFn(createAgentAccount);
   const [name, setName] = useState("");
   const [model, setModel] = useState("google/gemini-2.5-flash");
   const [roleId, setRoleId] = useState("");
   const [expires, setExpires] = useState(90);
   const [purpose, setPurpose] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const [sendMail, setSendMail] = useState(true);
   const [checked, setChecked] = useState<Set<string>>(new Set(["me.read"]));
   const [busy, setBusy] = useState(false);
   const [issued, setIssued] = useState<string | null>(null);
 
-  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
+  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setPassword(""); setCode(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
   const toggle = (s: string) => setChecked((p) => { const n = new Set(p); n.has(s) ? n.delete(s) : n.add(s); return n; });
+  const genPwd = () => setPassword("Ag_" + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 6).toUpperCase());
 
   const submit = async () => {
     if (!name.trim()) { toast.error("請輸入 Agent 名稱"); return; }
     if (!email.trim()) { toast.error("請輸入 Agent Email"); return; }
+    if (password.length < 8) { toast.error("請輸入至少 8 碼登入密碼（可按「產生」）"); return; }
+    if (!code.trim()) { toast.error("請輸入 Agent 代碼"); return; }
     setBusy(true);
     try {
       const emailLc = email.trim().toLowerCase();
-      const { data: agent, error: aErr } = await supabase.from("ai_agents")
-        .insert({ name: name.trim(), email: emailLc, model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
-        .select("id").single();
-      if (aErr) { toast.error(`建立 Agent 失敗：${aErr.message}`); return; }
+      let agentId: string;
+      try {
+        const res = await createAgent({ data: {
+          email: emailLc, password, full_name: name.trim(), code: code.trim(),
+          role_id: roleId || null, description: purpose || null, model,
+        }});
+        agentId = res.agent_id;
+      } catch (e) { toast.error(`建立 Agent 帳號失敗：${e instanceof Error ? e.message : String(e)}`); return; }
+
       const expiresAt = new Date(Date.now() + expires * 86400000).toISOString();
       const { data: token, error: tErr } = await supabase.rpc("create_agent_token", {
-        p_agent: agent.id, p_name: `${name.trim()} token`, p_expires: expiresAt, p_scopes: [...checked],
+        p_agent: agentId, p_name: `${name.trim()} token`, p_expires: expiresAt, p_scopes: [...checked],
       });
       if (tErr) { toast.error(`發行 Token 失敗：${tErr.message}`); return; }
       setIssued(String(token));
       if (sendMail) {
         const { error: eErr } = await supabase.functions.invoke("send-email", {
-          body: { to: emailLc, subject: `您的 AI Agent Token — ${name.trim()}`,
-            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
+          body: { to: emailLc, subject: `您的 AI Agent 帳號 — ${name.trim()}`,
+            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>登入密碼：<code>${password}</code></p><p>API Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
         });
-        if (eErr) toast.error(`Token 已建立，但寄信失敗：${eErr.message}`);
+        if (eErr) toast.error(`帳號已建立，但寄信失敗：${eErr.message}`);
         else toast.success(`已寄送到 ${emailLc}`);
       }
       onDone();
@@ -322,14 +337,26 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
         ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1 col-span-2"><Label>名稱 *</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="例如：Claude-Sonnet" /></div>
+              <div className="space-y-1"><Label>名稱 *</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="例如：Claude-Sonnet" /></div>
+              <div className="space-y-1"><Label>代碼 *</Label><Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="AGENT-001" /></div>
+              <div className="space-y-1 col-span-2">
+                <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（作為登入帳號與 Token 一併驗證）</span></Label>
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
+              </div>
+              <div className="space-y-1 col-span-2">
+                <Label>登入密碼 *（至少 8 碼）</Label>
+                <div className="flex gap-2">
+                  <Input type="text" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="供 Agent 登入後台使用" className="font-mono" />
+                  <Button type="button" variant="outline" onClick={genPwd}>產生</Button>
+                </div>
+              </div>
               <div className="space-y-1"><Label>模型</Label><Input value={model} onChange={(e) => setModel(e.target.value)} /></div>
               <div className="space-y-1"><Label>Token 有效期</Label>
                 <Select value={String(expires)} onValueChange={(v) => setExpires(Number(v))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>{EXPIRY_OPTIONS.map((d) => <SelectItem key={d} value={String(d)}>{d} 天</SelectItem>)}</SelectContent>
                 </Select></div>
-              <div className="space-y-1 col-span-2"><Label>角色（選填）</Label>
+              <div className="space-y-1 col-span-2"><Label>角色（決定 Agent 在系統內可存取的模組）</Label>
                 <Select value={roleId || "__none"} onValueChange={(v) => setRoleId(v === "__none" ? "" : v)}>
                   <SelectTrigger><SelectValue placeholder="選擇角色" /></SelectTrigger>
                   <SelectContent><SelectItem value="__none">— 未指定 —</SelectItem>{roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}</SelectContent>
@@ -337,15 +364,11 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
               <div className="space-y-1 col-span-2"><Label>用途說明</Label><Textarea rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="這個 Agent 用來做什麼？" /></div>
             </div>
             <ScopePicker catalog={catalog} checked={checked} toggle={toggle} />
-            <div className="space-y-1">
-              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（帳號識別，與 Token 一併驗證）</span></Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
-              <label className="flex items-center gap-2 text-xs text-muted-foreground pt-1 cursor-pointer">
-                <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
-                建立後寄送 Token 到此 Email
-              </label>
-            </div>
-            <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ 建立成功後 Token 只會顯示一次，請立即複製或用 Email 寄送。</div>
+            <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+              <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
+              建立後寄送登入密碼與 Token 到此 Email
+            </label>
+            <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ Agent 也是一個正式帳號（Email + 密碼可登入後台），另加 API Token 供程式呼叫。Token 只顯示一次。</div>
             <DialogFooter>
               <Button variant="outline" onClick={() => onOpenChange(false)}>取消</Button>
               <Button onClick={submit} disabled={busy}>{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : "建立並發行 Token"}</Button>
