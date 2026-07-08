@@ -275,10 +275,12 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
 
   const submit = async () => {
     if (!name.trim()) { toast.error("請輸入 Agent 名稱"); return; }
+    if (!email.trim()) { toast.error("請輸入 Agent Email"); return; }
     setBusy(true);
     try {
+      const emailLc = email.trim().toLowerCase();
       const { data: agent, error: aErr } = await supabase.from("ai_agents")
-        .insert({ name: name.trim(), model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
+        .insert({ name: name.trim(), email: emailLc, model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
         .select("id").single();
       if (aErr) { toast.error(`建立 Agent 失敗：${aErr.message}`); return; }
       const expiresAt = new Date(Date.now() + expires * 86400000).toISOString();
@@ -287,13 +289,13 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
       });
       if (tErr) { toast.error(`發行 Token 失敗：${tErr.message}`); return; }
       setIssued(String(token));
-      if (email.trim()) {
+      if (sendMail) {
         const { error: eErr } = await supabase.functions.invoke("send-email", {
-          body: { to: email.trim(), subject: `您的 AI Agent Token — ${name.trim()}`,
-            html: `<p>Agent：<b>${name.trim()}</b></p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
+          body: { to: emailLc, subject: `您的 AI Agent Token — ${name.trim()}`,
+            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
         });
         if (eErr) toast.error(`Token 已建立，但寄信失敗：${eErr.message}`);
-        else toast.success(`已寄送到 ${email.trim()}`);
+        else toast.success(`已寄送到 ${emailLc}`);
       }
       onDone();
     } finally { setBusy(false); }
