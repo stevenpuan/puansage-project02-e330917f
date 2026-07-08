@@ -337,14 +337,26 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
         ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1 col-span-2"><Label>名稱 *</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="例如：Claude-Sonnet" /></div>
+              <div className="space-y-1"><Label>名稱 *</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="例如：Claude-Sonnet" /></div>
+              <div className="space-y-1"><Label>代碼 *</Label><Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="AGENT-001" /></div>
+              <div className="space-y-1 col-span-2">
+                <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（作為登入帳號與 Token 一併驗證）</span></Label>
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
+              </div>
+              <div className="space-y-1 col-span-2">
+                <Label>登入密碼 *（至少 8 碼）</Label>
+                <div className="flex gap-2">
+                  <Input type="text" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="供 Agent 登入後台使用" className="font-mono" />
+                  <Button type="button" variant="outline" onClick={genPwd}>產生</Button>
+                </div>
+              </div>
               <div className="space-y-1"><Label>模型</Label><Input value={model} onChange={(e) => setModel(e.target.value)} /></div>
               <div className="space-y-1"><Label>Token 有效期</Label>
                 <Select value={String(expires)} onValueChange={(v) => setExpires(Number(v))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>{EXPIRY_OPTIONS.map((d) => <SelectItem key={d} value={String(d)}>{d} 天</SelectItem>)}</SelectContent>
                 </Select></div>
-              <div className="space-y-1 col-span-2"><Label>角色（選填）</Label>
+              <div className="space-y-1 col-span-2"><Label>角色（決定 Agent 在系統內可存取的模組）</Label>
                 <Select value={roleId || "__none"} onValueChange={(v) => setRoleId(v === "__none" ? "" : v)}>
                   <SelectTrigger><SelectValue placeholder="選擇角色" /></SelectTrigger>
                   <SelectContent><SelectItem value="__none">— 未指定 —</SelectItem>{roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}</SelectContent>
@@ -352,15 +364,11 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
               <div className="space-y-1 col-span-2"><Label>用途說明</Label><Textarea rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="這個 Agent 用來做什麼？" /></div>
             </div>
             <ScopePicker catalog={catalog} checked={checked} toggle={toggle} />
-            <div className="space-y-1">
-              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（帳號識別，與 Token 一併驗證）</span></Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
-              <label className="flex items-center gap-2 text-xs text-muted-foreground pt-1 cursor-pointer">
-                <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
-                建立後寄送 Token 到此 Email
-              </label>
-            </div>
-            <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ 建立成功後 Token 只會顯示一次，請立即複製或用 Email 寄送。</div>
+            <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+              <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
+              建立後寄送登入密碼與 Token 到此 Email
+            </label>
+            <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ Agent 也是一個正式帳號（Email + 密碼可登入後台），另加 API Token 供程式呼叫。Token 只顯示一次。</div>
             <DialogFooter>
               <Button variant="outline" onClick={() => onOpenChange(false)}>取消</Button>
               <Button onClick={submit} disabled={busy}>{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : "建立並發行 Token"}</Button>
