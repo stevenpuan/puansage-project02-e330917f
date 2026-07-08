@@ -264,42 +264,53 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
   open: boolean; onOpenChange: (v: boolean) => void; roles: { id: string; name: string }[]; onDone: () => void;
 }) {
   const { data: catalog = [] } = useScopeCatalog();
+  const createAgent = useServerFn(createAgentAccount);
   const [name, setName] = useState("");
   const [model, setModel] = useState("google/gemini-2.5-flash");
   const [roleId, setRoleId] = useState("");
   const [expires, setExpires] = useState(90);
   const [purpose, setPurpose] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const [sendMail, setSendMail] = useState(true);
   const [checked, setChecked] = useState<Set<string>>(new Set(["me.read"]));
   const [busy, setBusy] = useState(false);
   const [issued, setIssued] = useState<string | null>(null);
 
-  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
+  const reset = () => { setName(""); setModel("google/gemini-2.5-flash"); setRoleId(""); setExpires(90); setPurpose(""); setEmail(""); setPassword(""); setCode(""); setSendMail(true); setChecked(new Set(["me.read"])); setBusy(false); setIssued(null); };
   const toggle = (s: string) => setChecked((p) => { const n = new Set(p); n.has(s) ? n.delete(s) : n.add(s); return n; });
+  const genPwd = () => setPassword("Ag_" + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 6).toUpperCase());
 
   const submit = async () => {
     if (!name.trim()) { toast.error("請輸入 Agent 名稱"); return; }
     if (!email.trim()) { toast.error("請輸入 Agent Email"); return; }
+    if (password.length < 8) { toast.error("請輸入至少 8 碼登入密碼（可按「產生」）"); return; }
+    if (!code.trim()) { toast.error("請輸入 Agent 代碼"); return; }
     setBusy(true);
     try {
       const emailLc = email.trim().toLowerCase();
-      const { data: agent, error: aErr } = await supabase.from("ai_agents")
-        .insert({ name: name.trim(), email: emailLc, model, description: purpose || null, role_id: roleId || null, status: "active", kind: "inbound", provider: "internal" })
-        .select("id").single();
-      if (aErr) { toast.error(`建立 Agent 失敗：${aErr.message}`); return; }
+      let agentId: string;
+      try {
+        const res = await createAgent({ data: {
+          email: emailLc, password, full_name: name.trim(), code: code.trim(),
+          role_id: roleId || null, description: purpose || null, model,
+        }});
+        agentId = res.agent_id;
+      } catch (e) { toast.error(`建立 Agent 帳號失敗：${e instanceof Error ? e.message : String(e)}`); return; }
+
       const expiresAt = new Date(Date.now() + expires * 86400000).toISOString();
       const { data: token, error: tErr } = await supabase.rpc("create_agent_token", {
-        p_agent: agent.id, p_name: `${name.trim()} token`, p_expires: expiresAt, p_scopes: [...checked],
+        p_agent: agentId, p_name: `${name.trim()} token`, p_expires: expiresAt, p_scopes: [...checked],
       });
       if (tErr) { toast.error(`發行 Token 失敗：${tErr.message}`); return; }
       setIssued(String(token));
       if (sendMail) {
         const { error: eErr } = await supabase.functions.invoke("send-email", {
-          body: { to: emailLc, subject: `您的 AI Agent Token — ${name.trim()}`,
-            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
+          body: { to: emailLc, subject: `您的 AI Agent 帳號 — ${name.trim()}`,
+            html: `<p>Agent：<b>${name.trim()}</b></p><p>Email：${emailLc}</p><p>登入密碼：<code>${password}</code></p><p>API Token（僅此一次）：</p><pre>${token}</pre><p>端點：${AGENT_ENDPOINT}</p>` },
         });
-        if (eErr) toast.error(`Token 已建立，但寄信失敗：${eErr.message}`);
+        if (eErr) toast.error(`帳號已建立，但寄信失敗：${eErr.message}`);
         else toast.success(`已寄送到 ${emailLc}`);
       }
       onDone();
