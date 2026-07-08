@@ -50,9 +50,11 @@ import { Route as DashboardAiAgentsRouteImport } from './routes/dashboard/ai-age
 import { Route as DashboardAgentTokensRouteImport } from './routes/dashboard/agent-tokens'
 import { Route as DashboardAgentScopesRouteImport } from './routes/dashboard/agent-scopes'
 import { Route as DashboardAgentPromptRouteImport } from './routes/dashboard/agent-prompt'
+import { Route as DashboardAgentLearningRouteImport } from './routes/dashboard/agent-learning'
 import { Route as DashboardAgentAuditRouteImport } from './routes/dashboard/agent-audit'
 import { Route as DashboardAgentActivityRouteImport } from './routes/dashboard/agent-activity'
 import { Route as DashboardActivityLogsRouteImport } from './routes/dashboard/activity-logs'
+import { Route as DashboardAccountsRouteImport } from './routes/dashboard/accounts'
 import { Route as DashboardLedgerIndexRouteImport } from './routes/dashboard/ledger/index'
 import { Route as DashboardCasesIndexRouteImport } from './routes/dashboard/cases/index'
 import { Route as DashboardLedgerSystemsRouteImport } from './routes/dashboard/ledger/systems'
@@ -269,6 +271,11 @@ const DashboardAgentPromptRoute = DashboardAgentPromptRouteImport.update({
   path: '/agent-prompt',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAgentLearningRoute = DashboardAgentLearningRouteImport.update({
+  id: '/agent-learning',
+  path: '/agent-learning',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardAgentAuditRoute = DashboardAgentAuditRouteImport.update({
   id: '/agent-audit',
   path: '/agent-audit',
@@ -282,6 +289,11 @@ const DashboardAgentActivityRoute = DashboardAgentActivityRouteImport.update({
 const DashboardActivityLogsRoute = DashboardActivityLogsRouteImport.update({
   id: '/activity-logs',
   path: '/activity-logs',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAccountsRoute = DashboardAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardLedgerIndexRoute = DashboardLedgerIndexRouteImport.update({
@@ -326,9 +338,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/accounts': typeof DashboardAccountsRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-learning': typeof DashboardAgentLearningRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
@@ -378,9 +392,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/dashboard/accounts': typeof DashboardAccountsRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-learning': typeof DashboardAgentLearningRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
@@ -432,9 +448,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/accounts': typeof DashboardAccountsRoute
   '/dashboard/activity-logs': typeof DashboardActivityLogsRoute
   '/dashboard/agent-activity': typeof DashboardAgentActivityRoute
   '/dashboard/agent-audit': typeof DashboardAgentAuditRoute
+  '/dashboard/agent-learning': typeof DashboardAgentLearningRoute
   '/dashboard/agent-prompt': typeof DashboardAgentPromptRoute
   '/dashboard/agent-scopes': typeof DashboardAgentScopesRoute
   '/dashboard/agent-tokens': typeof DashboardAgentTokensRoute
@@ -487,9 +505,11 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/accounts'
     | '/dashboard/activity-logs'
     | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
+    | '/dashboard/agent-learning'
     | '/dashboard/agent-prompt'
     | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
@@ -539,9 +559,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/dashboard/accounts'
     | '/dashboard/activity-logs'
     | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
+    | '/dashboard/agent-learning'
     | '/dashboard/agent-prompt'
     | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
@@ -592,9 +614,11 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/accounts'
     | '/dashboard/activity-logs'
     | '/dashboard/agent-activity'
     | '/dashboard/agent-audit'
+    | '/dashboard/agent-learning'
     | '/dashboard/agent-prompt'
     | '/dashboard/agent-scopes'
     | '/dashboard/agent-tokens'
@@ -937,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAgentPromptRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/agent-learning': {
+      id: '/dashboard/agent-learning'
+      path: '/agent-learning'
+      fullPath: '/dashboard/agent-learning'
+      preLoaderRoute: typeof DashboardAgentLearningRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/agent-audit': {
       id: '/dashboard/agent-audit'
       path: '/agent-audit'
@@ -956,6 +987,13 @@ declare module '@tanstack/react-router' {
       path: '/activity-logs'
       fullPath: '/dashboard/activity-logs'
       preLoaderRoute: typeof DashboardActivityLogsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/accounts': {
+      id: '/dashboard/accounts'
+      path: '/accounts'
+      fullPath: '/dashboard/accounts'
+      preLoaderRoute: typeof DashboardAccountsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/ledger/': {
@@ -1011,9 +1049,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardAccountsRoute: typeof DashboardAccountsRoute
   DashboardActivityLogsRoute: typeof DashboardActivityLogsRoute
   DashboardAgentActivityRoute: typeof DashboardAgentActivityRoute
   DashboardAgentAuditRoute: typeof DashboardAgentAuditRoute
+  DashboardAgentLearningRoute: typeof DashboardAgentLearningRoute
   DashboardAgentPromptRoute: typeof DashboardAgentPromptRoute
   DashboardAgentScopesRoute: typeof DashboardAgentScopesRoute
   DashboardAgentTokensRoute: typeof DashboardAgentTokensRoute
@@ -1062,9 +1102,11 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAccountsRoute: DashboardAccountsRoute,
   DashboardActivityLogsRoute: DashboardActivityLogsRoute,
   DashboardAgentActivityRoute: DashboardAgentActivityRoute,
   DashboardAgentAuditRoute: DashboardAgentAuditRoute,
+  DashboardAgentLearningRoute: DashboardAgentLearningRoute,
   DashboardAgentPromptRoute: DashboardAgentPromptRoute,
   DashboardAgentScopesRoute: DashboardAgentScopesRoute,
   DashboardAgentTokensRoute: DashboardAgentTokensRoute,
@@ -1124,3 +1166,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
