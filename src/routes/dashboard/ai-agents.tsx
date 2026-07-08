@@ -338,8 +338,12 @@ function NewAgentWithTokenDialog({ open, onOpenChange, roles, onDone }: {
             </div>
             <ScopePicker catalog={catalog} checked={checked} toggle={toggle} />
             <div className="space-y-1">
-              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> 寄送 Token 到 Email（選填）</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="留空則不寄，發行後畫面顯示一次" />
+              <Label className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> Agent Email * <span className="text-[11px] text-muted-foreground font-normal">（帳號識別，與 Token 一併驗證）</span></Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="agent@example.com" />
+              <label className="flex items-center gap-2 text-xs text-muted-foreground pt-1 cursor-pointer">
+                <input type="checkbox" checked={sendMail} onChange={(e) => setSendMail(e.target.checked)} />
+                建立後寄送 Token 到此 Email
+              </label>
             </div>
             <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-800">⚠ 建立成功後 Token 只會顯示一次，請立即複製或用 Email 寄送。</div>
             <DialogFooter>
