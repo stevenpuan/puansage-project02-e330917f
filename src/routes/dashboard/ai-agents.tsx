@@ -109,11 +109,13 @@ function Page() {
     toast.success("已更新"); setEditDialog(false);
     qc.invalidateQueries({ queryKey: ["ai_agents"] });
   };
+  const delAgent = useServerFn(deleteAgentAccount);
   const del = async (a: AgentRow) => {
-    if (!confirm(`確定刪除 Agent「${a.name}」？`)) return;
-    const { error } = await supabase.from("ai_agents").delete().eq("id", a.id);
-    if (error) { toast.error(error.message); return; }
-    toast.success("已刪除"); qc.invalidateQueries({ queryKey: ["ai_agents"] });
+    if (!confirm(`確定刪除 Agent「${a.name}」？此動作會同時移除對應的登入帳號。`)) return;
+    try {
+      await delAgent({ data: { agent_id: a.id } });
+      toast.success("已刪除"); qc.invalidateQueries({ queryKey: ["ai_agents"] });
+    } catch (e) { toast.error(e instanceof Error ? e.message : String(e)); }
   };
   const copyEndpoint = () => { navigator.clipboard.writeText(AGENT_ENDPOINT); toast.success("已複製端點"); };
 
