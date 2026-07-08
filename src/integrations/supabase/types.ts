@@ -426,6 +426,7 @@ export type Database = {
           case_id: string | null
           created_at: string
           created_by: string | null
+          created_by_agent: string | null
           description: string | null
           done_at: string | null
           due_date: string | null
@@ -440,6 +441,7 @@ export type Database = {
           case_id?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           done_at?: string | null
           due_date?: string | null
@@ -454,6 +456,7 @@ export type Database = {
           case_id?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           done_at?: string | null
           due_date?: string | null
@@ -500,6 +503,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "case_tasks_created_by_agent_fkey"
+            columns: ["created_by_agent"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "case_tasks_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -517,6 +527,7 @@ export type Database = {
           code: string
           created_at: string
           created_by: string | null
+          created_by_agent: string | null
           description: string | null
           due_date: string | null
           go_live_date: string | null
@@ -542,6 +553,7 @@ export type Database = {
           code: string
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           due_date?: string | null
           go_live_date?: string | null
@@ -567,6 +579,7 @@ export type Database = {
           code?: string
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           due_date?: string | null
           go_live_date?: string | null
@@ -612,6 +625,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_receivables_by_client"
             referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "cases_created_by_agent_fkey"
+            columns: ["created_by_agent"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "cases_created_by_fkey"
@@ -1837,6 +1857,7 @@ export type Database = {
           converted_project_id: string | null
           created_at: string
           created_by: string | null
+          created_by_agent: string | null
           est_amount: number | null
           id: string
           next_action: string | null
@@ -1855,6 +1876,7 @@ export type Database = {
           converted_project_id?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           est_amount?: number | null
           id?: string
           next_action?: string | null
@@ -1873,6 +1895,7 @@ export type Database = {
           converted_project_id?: string | null
           created_at?: string
           created_by?: string | null
+          created_by_agent?: string | null
           est_amount?: number | null
           id?: string
           next_action?: string | null
@@ -1940,6 +1963,13 @@ export type Database = {
             columns: ["converted_project_id"]
             isOneToOne: false
             referencedRelation: "v_warranty_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_created_by_agent_fkey"
+            columns: ["created_by_agent"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
             referencedColumns: ["id"]
           },
           {
@@ -2311,6 +2341,39 @@ export type Database = {
           },
         ]
       }
+      role_agent_scopes: {
+        Row: {
+          created_at: string
+          role_id: string
+          scope: string
+        }
+        Insert: {
+          created_at?: string
+          role_id: string
+          scope: string
+        }
+        Update: {
+          created_at?: string
+          role_id?: string
+          scope?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_agent_scopes_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_agent_scopes_scope_fkey"
+            columns: ["scope"]
+            isOneToOne: false
+            referencedRelation: "agent_scopes"
+            referencedColumns: ["scope"]
+          },
+        ]
+      }
       role_module_permissions: {
         Row: {
           can_create: boolean
@@ -2422,6 +2485,7 @@ export type Database = {
           contract_id: string | null
           created_at: string | null
           created_by: string | null
+          created_by_agent: string | null
           description: string | null
           id: string
           note: string | null
@@ -2444,6 +2508,7 @@ export type Database = {
           contract_id?: string | null
           created_at?: string | null
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           id?: string
           note?: string | null
@@ -2466,6 +2531,7 @@ export type Database = {
           contract_id?: string | null
           created_at?: string | null
           created_by?: string | null
+          created_by_agent?: string | null
           description?: string | null
           id?: string
           note?: string | null
@@ -2529,6 +2595,13 @@ export type Database = {
             columns: ["contract_id"]
             isOneToOne: false
             referencedRelation: "v_contract_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_tickets_created_by_agent_fkey"
+            columns: ["created_by_agent"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
             referencedColumns: ["id"]
           },
           {
@@ -2738,6 +2811,21 @@ export type Database = {
       }
     }
     Views: {
+      v_agent_activity: {
+        Row: {
+          after: Json | null
+          agent_id: string | null
+          agent_name: string | null
+          before: Json | null
+          created_at: string | null
+          id: string | null
+          op: string | null
+          resource: string | null
+          target_id: string | null
+          title: string | null
+        }
+        Relationships: []
+      }
       v_calendar: {
         Row: {
           all_day: boolean | null
@@ -3545,6 +3633,7 @@ export type Database = {
         }
         Returns: Json
       }
+      agent_role_scopes: { Args: { p_agent: string }; Returns: string[] }
       agent_write: {
         Args: {
           p_agent: string
@@ -3582,6 +3671,10 @@ export type Database = {
       }
       redeem_invitation: { Args: { p_code: string }; Returns: string }
       set_commission_rate: { Args: { p_rate: number }; Returns: number }
+      set_role_scopes: {
+        Args: { p_role: string; p_scopes: string[] }
+        Returns: undefined
+      }
       user_can: {
         Args: { p_action: string; p_module: string }
         Returns: boolean
