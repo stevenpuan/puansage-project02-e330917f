@@ -86,14 +86,16 @@ function Page() {
 
   const openEdit = (a: AgentRow) => {
     setEditing(a);
-    setForm({ code: a.code ?? "", name: a.name, description: a.description ?? "", status: a.status ?? "active",
+    setForm({ code: a.code ?? "", name: a.name, email: a.email ?? "", description: a.description ?? "", status: a.status ?? "active",
       role_id: a.role_id ?? "", model: a.model ?? "", system_prompt: a.system_prompt ?? "", persona: personaToForm(a.persona) });
     setEditDialog(true);
   };
   const saveEdit = async () => {
     if (!form.name.trim()) { toast.error("請輸入名稱"); return; }
+    if (!form.email.trim()) { toast.error("請輸入 Email"); return; }
     const payload = {
-      code: form.code.trim() || null, name: form.name.trim(), description: form.description || null,
+      code: form.code.trim() || null, name: form.name.trim(), email: form.email.trim().toLowerCase(),
+      description: form.description || null,
       status: form.status, role_id: form.role_id || null, model: form.model || null,
       system_prompt: form.system_prompt || null,
       persona: { ...form.persona } as unknown as import("@/integrations/supabase/types").Json,
