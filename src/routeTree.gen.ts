@@ -28,6 +28,7 @@ import { Route as DashboardQuotesRouteImport } from './routes/dashboard/quotes'
 import { Route as DashboardProjectDashboardRouteImport } from './routes/dashboard/project-dashboard'
 import { Route as DashboardProjectBoardRouteImport } from './routes/dashboard/project-board'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard/profile'
+import { Route as DashboardPnlRouteImport } from './routes/dashboard/pnl'
 import { Route as DashboardPaymentsRouteImport } from './routes/dashboard/payments'
 import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard/opportunities'
 import { Route as DashboardMenuManagementRouteImport } from './routes/dashboard/menu-management'
@@ -38,6 +39,7 @@ import { Route as DashboardInvoicesRouteImport } from './routes/dashboard/invoic
 import { Route as DashboardInvitationsRouteImport } from './routes/dashboard/invitations'
 import { Route as DashboardFundRouteImport } from './routes/dashboard/fund'
 import { Route as DashboardFeatureRequestsRouteImport } from './routes/dashboard/feature-requests'
+import { Route as DashboardExpensesRouteImport } from './routes/dashboard/expenses'
 import { Route as DashboardErrorLogsRouteImport } from './routes/dashboard/error-logs'
 import { Route as DashboardDevTodosRouteImport } from './routes/dashboard/dev-todos'
 import { Route as DashboardDevHistoryRouteImport } from './routes/dashboard/dev-history'
@@ -160,6 +162,11 @@ const DashboardProfileRoute = DashboardProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPnlRoute = DashboardPnlRouteImport.update({
+  id: '/pnl',
+  path: '/pnl',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPaymentsRoute = DashboardPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -211,6 +218,11 @@ const DashboardFeatureRequestsRoute =
     path: '/feature-requests',
     getParentRoute: () => DashboardRoute,
   } as any)
+const DashboardExpensesRoute = DashboardExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardErrorLogsRoute = DashboardErrorLogsRouteImport.update({
   id: '/error-logs',
   path: '/error-logs',
@@ -355,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
+  '/dashboard/expenses': typeof DashboardExpensesRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
@@ -365,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pnl': typeof DashboardPnlRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/project-board': typeof DashboardProjectBoardRoute
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
@@ -409,6 +423,7 @@ export interface FileRoutesByTo {
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
+  '/dashboard/expenses': typeof DashboardExpensesRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
@@ -419,6 +434,7 @@ export interface FileRoutesByTo {
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pnl': typeof DashboardPnlRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/project-board': typeof DashboardProjectBoardRoute
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
@@ -465,6 +481,7 @@ export interface FileRoutesById {
   '/dashboard/dev-history': typeof DashboardDevHistoryRoute
   '/dashboard/dev-todos': typeof DashboardDevTodosRoute
   '/dashboard/error-logs': typeof DashboardErrorLogsRoute
+  '/dashboard/expenses': typeof DashboardExpensesRoute
   '/dashboard/feature-requests': typeof DashboardFeatureRequestsRoute
   '/dashboard/fund': typeof DashboardFundRoute
   '/dashboard/invitations': typeof DashboardInvitationsRoute
@@ -475,6 +492,7 @@ export interface FileRoutesById {
   '/dashboard/menu-management': typeof DashboardMenuManagementRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pnl': typeof DashboardPnlRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/project-board': typeof DashboardProjectBoardRoute
   '/dashboard/project-dashboard': typeof DashboardProjectDashboardRoute
@@ -522,6 +540,7 @@ export interface FileRouteTypes {
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
+    | '/dashboard/expenses'
     | '/dashboard/feature-requests'
     | '/dashboard/fund'
     | '/dashboard/invitations'
@@ -532,6 +551,7 @@ export interface FileRouteTypes {
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
+    | '/dashboard/pnl'
     | '/dashboard/profile'
     | '/dashboard/project-board'
     | '/dashboard/project-dashboard'
@@ -576,6 +596,7 @@ export interface FileRouteTypes {
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
+    | '/dashboard/expenses'
     | '/dashboard/feature-requests'
     | '/dashboard/fund'
     | '/dashboard/invitations'
@@ -586,6 +607,7 @@ export interface FileRouteTypes {
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
+    | '/dashboard/pnl'
     | '/dashboard/profile'
     | '/dashboard/project-board'
     | '/dashboard/project-dashboard'
@@ -631,6 +653,7 @@ export interface FileRouteTypes {
     | '/dashboard/dev-history'
     | '/dashboard/dev-todos'
     | '/dashboard/error-logs'
+    | '/dashboard/expenses'
     | '/dashboard/feature-requests'
     | '/dashboard/fund'
     | '/dashboard/invitations'
@@ -641,6 +664,7 @@ export interface FileRouteTypes {
     | '/dashboard/menu-management'
     | '/dashboard/opportunities'
     | '/dashboard/payments'
+    | '/dashboard/pnl'
     | '/dashboard/profile'
     | '/dashboard/project-board'
     | '/dashboard/project-dashboard'
@@ -807,6 +831,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProfileRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/pnl': {
+      id: '/dashboard/pnl'
+      path: '/pnl'
+      fullPath: '/dashboard/pnl'
+      preLoaderRoute: typeof DashboardPnlRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/payments': {
       id: '/dashboard/payments'
       path: '/payments'
@@ -875,6 +906,13 @@ declare module '@tanstack/react-router' {
       path: '/feature-requests'
       fullPath: '/dashboard/feature-requests'
       preLoaderRoute: typeof DashboardFeatureRequestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/expenses': {
+      id: '/dashboard/expenses'
+      path: '/expenses'
+      fullPath: '/dashboard/expenses'
+      preLoaderRoute: typeof DashboardExpensesRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/error-logs': {
@@ -1066,6 +1104,7 @@ interface DashboardRouteChildren {
   DashboardDevHistoryRoute: typeof DashboardDevHistoryRoute
   DashboardDevTodosRoute: typeof DashboardDevTodosRoute
   DashboardErrorLogsRoute: typeof DashboardErrorLogsRoute
+  DashboardExpensesRoute: typeof DashboardExpensesRoute
   DashboardFeatureRequestsRoute: typeof DashboardFeatureRequestsRoute
   DashboardFundRoute: typeof DashboardFundRoute
   DashboardInvitationsRoute: typeof DashboardInvitationsRoute
@@ -1076,6 +1115,7 @@ interface DashboardRouteChildren {
   DashboardMenuManagementRoute: typeof DashboardMenuManagementRoute
   DashboardOpportunitiesRoute: typeof DashboardOpportunitiesRoute
   DashboardPaymentsRoute: typeof DashboardPaymentsRoute
+  DashboardPnlRoute: typeof DashboardPnlRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardProjectBoardRoute: typeof DashboardProjectBoardRoute
   DashboardProjectDashboardRoute: typeof DashboardProjectDashboardRoute
@@ -1119,6 +1159,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDevHistoryRoute: DashboardDevHistoryRoute,
   DashboardDevTodosRoute: DashboardDevTodosRoute,
   DashboardErrorLogsRoute: DashboardErrorLogsRoute,
+  DashboardExpensesRoute: DashboardExpensesRoute,
   DashboardFeatureRequestsRoute: DashboardFeatureRequestsRoute,
   DashboardFundRoute: DashboardFundRoute,
   DashboardInvitationsRoute: DashboardInvitationsRoute,
@@ -1129,6 +1170,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardMenuManagementRoute: DashboardMenuManagementRoute,
   DashboardOpportunitiesRoute: DashboardOpportunitiesRoute,
   DashboardPaymentsRoute: DashboardPaymentsRoute,
+  DashboardPnlRoute: DashboardPnlRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardProjectBoardRoute: DashboardProjectBoardRoute,
   DashboardProjectDashboardRoute: DashboardProjectDashboardRoute,
